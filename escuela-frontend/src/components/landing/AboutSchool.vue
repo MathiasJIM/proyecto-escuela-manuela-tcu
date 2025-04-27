@@ -1,0 +1,209 @@
+<template>
+  <div class="about-school-section">
+    <div class="about-content">
+      <div class="about-text">
+        <div class="costa-rica-icon">
+          <img src="@/assets/images/mep-logo.webp" alt="Costa Rica" class="cr-icon" />
+        </div>
+        <h2 class="about-title">
+          En la escuela Manuela<br />
+          Santamaria Rodriguez
+        </h2>
+        <p class="about-description">
+          Brindar una educación integral y de calidad que promueva el desarrollo académico,
+          emocional y social de nuestros estudiantes, fomentando valores como el respeto, la
+          responsabilidad y la solidaridad, en un ambiente inclusivo, seguro y colaborativo que
+          involucre activamente a las familias y a la comunidad educativa.
+        </p>
+      </div>
+
+      <div class="about-images">
+        <div class="main-image">
+          <img src="@/assets/images/escuela-image1.webp" alt="Escuela Manuela Santamaria" />
+        </div>
+        <div class="image-grid">
+          <img src="@/assets/images/escuela-ninos.jpg" alt="Estudiantes" class="grid-image" />
+          <img
+            src="@/assets/images/escuela-ninos1.webp"
+            alt="Actividades escolares"
+            class="grid-image"
+          />
+          <img
+            src="@/assets/images/escuela-ninos3.webp"
+            alt="Estudiantes en clase"
+            class="grid-image"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+// No additional logic needed for this component
+</script>
+
+<style scoped>
+.about-school-section {
+  width: 100%;
+  padding-top: 7rem;
+  padding-bottom: var(--spacing32xl);
+  background-color: var(--bg-light);
+}
+
+.about-content {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2xl);
+}
+
+.about-text {
+  flex: 1;
+  max-width: 500px;
+}
+
+.costa-rica-icon {
+  width: 150px;
+  height: 100px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 0px;
+}
+
+.cr-icon {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.about-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.3;
+  position: relative;
+  padding-bottom: var(--spacing-sm);
+}
+
+.about-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 60px;
+  height: 3px;
+  background-color: var(--primary-color);
+}
+
+.about-description {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--text-medium);
+  text-align: left;
+}
+
+.about-images {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.main-image {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.main-image:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
+}
+
+.main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  height: 180px;
+}
+
+.grid-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.grid-image:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .about-content {
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-school-section {
+    padding: 200px 0 60px;
+  }
+  
+  .about-content {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .about-text {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .about-title {
+    font-size: 28px;
+  }
+
+  .costa-rica-icon {
+    width: 120px;
+    height: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-school-section {
+    padding: 200px 0 60px;
+  }
+
+  .image-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .grid-image:last-child {
+    grid-column: span 2;
+  }
+}
+</style>
