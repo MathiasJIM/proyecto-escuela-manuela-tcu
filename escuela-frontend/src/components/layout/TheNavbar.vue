@@ -9,14 +9,14 @@
       <div class="links">
         <div class="auth-buttons">
           <a href="/crear-cuenta" class="btn-crear">Crear Cuenta</a>
-          <button class="btn-login">Iniciar Sesión</button>
+          <router-link to="/login" class="btn-login">Iniciar Sesión</router-link>
         </div>
         <div class="nav-items">
           <a href="#nuestra-escuela" class="nav-link">Nuestra Escuela</a>
           <a href="#servicios" class="nav-link">Servicios</a>
           <a href="#noticias" class="nav-link">Noticias</a>
           <a href="#contacto" class="nav-link">Contacto</a>
-          <router-link to="/portal-padres" class="nav-link">Portal de Padres</router-link>
+          <router-link to="/login" class="nav-link portal-link">Acceder al Portal <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="portal-icon"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></router-link>
         </div>
       </div>
 
@@ -47,14 +47,14 @@
           <a href="#servicios" class="mobile-nav-link" @click="toggleMobileMenu">Servicios</a>
           <a href="#noticias" class="mobile-nav-link" @click="toggleMobileMenu">Noticias</a>
           <a href="#contacto" class="mobile-nav-link" @click="toggleMobileMenu">Contacto</a>
-          <router-link to="/portal-padres" class="mobile-nav-link" @click="toggleMobileMenu"
-            >Portal de Padres</router-link
+          <router-link to="/login" class="mobile-nav-link" @click="toggleMobileMenu"
+            >Acceder al Portal</router-link
           >
         </div>
 
         <div class="mobile-auth-buttons">
           <a href="/crear-cuenta" class="btn-crear">Crear Cuenta</a>
-          <button class="btn-login">Iniciar Sesión</button>
+          <router-link to="/login" class="btn-login">Iniciar Sesión</router-link>
         </div>
       </div>
     </div>
@@ -174,6 +174,22 @@ function toggleMobileMenu() {
 
 .router-link-active::after {
   transform: scaleX(1);
+}
+
+.portal-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: var(--font-weight-medium);
+  color: var(--primary-color);
+}
+
+.portal-icon {
+  transition: transform var(--transition-fast);
+}
+
+.portal-link:hover .portal-icon {
+  transform: translateX(3px);
 }
 
 .auth-buttons {

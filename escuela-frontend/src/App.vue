@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import TheNavbar from '@/components/layout/TheNavbar.vue'
-import TheFooter from '@/components/layout/TheFooter.vue'
 import '@/assets/css/variables.css'
 </script>
 
 <template>
   <div id="app">
-    <TheNavbar />
     <router-view />
-    <TheFooter />
   </div>
 </template>
 

@@ -6,13 +6,31 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'landing',
-      component: LandingPage,
+      component: () => import('@/components/layout/PublicLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'landing',
+          component: LandingPage,
+        },
+
+      ],
     },
     {
-      path: '/portal-padres',
-      name: 'portal',
-      component: () => import('@/views/PortalPadresView.vue'),
+      path: '/',
+      component: () => import('@/components/layout/AuthLayout.vue'),
+      children: [
+        {
+          path: 'login',
+          name: 'login',
+          component: () => import('@/views/LoginView.vue'),
+        },
+        {
+          path: 'crear-cuenta',
+          name: 'register',
+          component: () => import('@/views/RegisterView.vue'),
+        },
+      ],
     },
   ],
 })
