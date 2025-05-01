@@ -263,7 +263,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAttendance } from '@/composables/useAttendance'
+import { useAttendance } from '@/composables/dashboards/profesores/useAttendance'
 
 const {
   loading,
@@ -291,5 +291,5 @@ const {
 </script>
 
 <style scoped>
-@import '@/assets/styles/dashboards/attendance.css';
+@import '@/assets/styles/dashboards/profesores/attendance.css';
 </style>

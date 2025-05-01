@@ -49,7 +49,7 @@ const router = createRouter({
         {
           path: 'profesores/calendario',
           name: 'teacher-calendar',
-          component: () => import('@/components/dashboards/profesores/DashboardHome.vue'), // Placeholder
+          component: () => import('@/components/dashboards/profesores/CalendarView.vue'),
         },
         {
           path: 'profesores/citas',

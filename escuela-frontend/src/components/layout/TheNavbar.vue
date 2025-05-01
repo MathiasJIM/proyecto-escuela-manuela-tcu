@@ -8,6 +8,7 @@
       <!-- Desktop Links -->
       <div class="links">
         <div class="auth-buttons">
+          <router-link to="/crear-cuenta" class="btn-register">Crear Cuenta</router-link>
           <router-link to="/login" class="btn-login">Iniciar Sesión</router-link>
         </div>
         <div class="nav-items">
@@ -53,6 +54,7 @@
 
         <div class="mobile-auth-buttons">
           <router-link to="/login" class="btn-login">Iniciar Sesión</router-link>
+          <router-link to="/crear-cuenta" class="btn-register">Crear Cuenta</router-link>
         </div>
       </div>
     </div>

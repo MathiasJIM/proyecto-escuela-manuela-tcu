@@ -1,0 +1,270 @@
+/* Importar estilos de vue-cal */
+@import 'vue-cal/dist/vuecal.css';
+
+/* Estilos personalizados para el calendario */
+.calendar-container {
+  width: 100%;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar-header h1 {
+  color: var(--primary-color);
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.calendar-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: #f0f0f0;
+  color: var(--text-color);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+/* Estilos para el modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #999;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 16px;
+}
+
+.form-group-half {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.time-select {
+  appearance: menulist;
+  background-color: white;
+  cursor: pointer;
+  height: 40px;
+}
+
+.time-select option {
+  padding: 8px;
+  font-size: 14px;
+}
+
+/* Estilos para los eventos */
+.escuela-calendar .vuecal__event {
+  border-radius: 4px;
+}
+
+.event-blue {
+  background-color: rgba(0, 123, 255, 0.8) !important;
+  color: white !important;
+  border-left: 3px solid #0056b3 !important;
+}
+
+.event-green {
+  background-color: rgba(40, 167, 69, 0.8) !important;
+  color: white !important;
+  border-left: 3px solid #1e7e34 !important;
+}
+
+.event-orange {
+  background-color: rgba(255, 153, 0, 0.8) !important;
+  color: white !important;
+  border-left: 3px solid #d68000 !important;
+}
+
+.event-red {
+  background-color: rgba(220, 53, 69, 0.8) !important;
+  color: white !important;
+  border-left: 3px solid #b21f2d !important;
+}
+
+.event-purple {
+  background-color: rgba(111, 66, 193, 0.8) !important;
+  color: white !important;
+  border-left: 3px solid #563d7c !important;
+}
+
+/* Personalización de vue-cal */
+.escuela-calendar .vuecal__title-bar {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.escuela-calendar .vuecal__menu {
+  background-color: #f8f9fa;
+}
+
+.escuela-calendar .vuecal__view-btn {
+  color: var(--text-color);
+  border-bottom: 3px solid transparent;
+}
+
+.escuela-calendar .vuecal__view-btn--active {
+  background-color: transparent;
+  border-bottom-color: var(--primary-color);
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.escuela-calendar .vuecal__arrow {
+  color: white;
+}
+
+.escuela-calendar .vuecal__today-btn {
+  color: white;
+}
+
+.escuela-calendar .vuecal__header {
+  background-color: #f8f9fa;
+}
+
+.escuela-calendar .vuecal__weekdays-headings {
+  border-bottom: 1px solid #eee;
+  font-weight: bold;
+}
+
+.escuela-calendar .vuecal__heading {
+  color: var(--text-color);
+}
+
+.escuela-calendar .vuecal__cell {
+  border-color: #eee;
+}
+
+.escuela-calendar .vuecal__cell--today {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.escuela-calendar .vuecal__cell--selected {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.escuela-calendar .vuecal__cell--out-of-scope {
+  background-color: #f8f9fa;
+}
+
+.escuela-calendar .vuecal__no-event {
+  color: #999;
+  font-style: italic;
+}
+
+.vuecal__title > button {
+  color: white;
+}

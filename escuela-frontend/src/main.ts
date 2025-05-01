@@ -28,7 +28,8 @@ import {
   faLocationDot,
   faPhone,
   faDirections,
-  faEnvelope
+  faEnvelope,
+  faLock
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -40,7 +41,10 @@ import {
   faEnvelope as farEnvelope,
   faMap,
   faAddressBook,
-  faBuilding
+  faBuilding,
+  faEye,
+  faEyeSlash,
+  faUser as farUser
 } from '@fortawesome/free-regular-svg-icons'
 
 import App from './App.vue'
@@ -70,12 +74,16 @@ library.add(
   faPhone,
   faDirections,
   faEnvelope,
+  faLock,
   faFacebookSquare,
   faFacebook,
   farEnvelope,
   faMap,
   faAddressBook,
-  faBuilding
+  faBuilding,
+  faEye,
+  faEyeSlash,
+  farUser
 )
 
 const app = createApp(App)

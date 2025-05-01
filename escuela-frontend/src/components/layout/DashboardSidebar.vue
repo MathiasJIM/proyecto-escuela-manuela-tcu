@@ -64,6 +64,6 @@ const isActive = (path: string) => {
 </script>
 
 <style scoped>
-@import '@/assets/styles/dashboards/sidebar.css';
+@import '@/assets/styles/dashboards/profesores/sidebar.css';
 
 </style>

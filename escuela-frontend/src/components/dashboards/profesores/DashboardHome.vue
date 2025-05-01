@@ -144,5 +144,5 @@ const formattedDate = computed(() => {
 </script>
 
 <style scoped>
-@import '@/assets/styles/dashboards/dashboardhome.css';
+@import '@/assets/styles/dashboards/profesores/dashboardhome.css';
 </style>
