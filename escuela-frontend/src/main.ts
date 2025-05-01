@@ -6,13 +6,77 @@ import { createPinia } from 'pinia'
 // Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons'
+import {
+  faBars,
+  faXmark,
+  faHome,
+  faClipboardCheck,
+  faCalendarAlt,
+  faUsers,
+  faBook,
+  faBell,
+  faUser,
+  faSignOutAlt,
+  faClock,
+  faCheck,
+  faTimes,
+  faFile,
+  faCheckCircle,
+  faSearch,
+  faInfoCircle,
+  faChevronDown,
+  faLocationDot,
+  faPhone,
+  faDirections,
+  faEnvelope
+} from '@fortawesome/free-solid-svg-icons'
+
+import {
+  faFacebookSquare,
+  faFacebook
+} from '@fortawesome/free-brands-svg-icons'
+
+import {
+  faEnvelope as farEnvelope,
+  faMap,
+  faAddressBook,
+  faBuilding
+} from '@fortawesome/free-regular-svg-icons'
 
 import App from './App.vue'
 import router from './router'
 
 // Add icons to the library
-library.add(faBars, faXmark)
+library.add(
+  faBars,
+  faXmark,
+  faHome,
+  faClipboardCheck,
+  faCalendarAlt,
+  faUsers,
+  faBook,
+  faBell,
+  faUser,
+  faSignOutAlt,
+  faClock,
+  faCheck,
+  faTimes,
+  faFile,
+  faCheckCircle,
+  faSearch,
+  faInfoCircle,
+  faChevronDown,
+  faLocationDot,
+  faPhone,
+  faDirections,
+  faEnvelope,
+  faFacebookSquare,
+  faFacebook,
+  farEnvelope,
+  faMap,
+  faAddressBook,
+  faBuilding
+)
 
 const app = createApp(App)
 

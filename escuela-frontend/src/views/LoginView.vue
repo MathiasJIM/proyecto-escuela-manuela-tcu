@@ -82,7 +82,7 @@
         </form>
         
         <div class="login-footer">
-          <p>¿No tiene una cuenta? <a href="/crear-cuenta" class="signup-link">Crear Cuenta</a></p>
+          <p>Si no tiene acceso, por favor contacte a la administración de la escuela</p>
         </div>
       </div>
       

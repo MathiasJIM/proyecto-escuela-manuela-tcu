@@ -32,6 +32,47 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: '/dashboard',
+      component: () => import('@/components/layout/DashboardLayout.vue'),
+      children: [
+        {
+          path: 'profesores/inicio',
+          name: 'teacher-dashboard',
+          component: () => import('@/components/dashboards/profesores/DashboardHome.vue'),
+        },
+        {
+          path: 'profesores/asistencia',
+          name: 'teacher-attendance',
+          component: () => import('@/components/dashboards/profesores/AttendanceView.vue'),
+        },
+        {
+          path: 'profesores/calendario',
+          name: 'teacher-calendar',
+          component: () => import('@/components/dashboards/profesores/DashboardHome.vue'), // Placeholder
+        },
+        {
+          path: 'profesores/citas',
+          name: 'teacher-appointments',
+          component: () => import('@/components/dashboards/profesores/DashboardHome.vue'), // Placeholder
+        },
+        {
+          path: 'profesores/material',
+          name: 'teacher-materials',
+          component: () => import('@/components/dashboards/profesores/DashboardHome.vue'), // Placeholder
+        },
+        {
+          path: 'profesores/notificaciones',
+          name: 'teacher-notifications',
+          component: () => import('@/components/dashboards/profesores/DashboardHome.vue'), // Placeholder
+        },
+        {
+          path: 'profesores/perfil',
+          name: 'teacher-profile',
+          component: () => import('@/components/dashboards/profesores/DashboardHome.vue'), // Placeholder
+        },
+      ],
+    },
   ],
 })
 
