@@ -15,6 +15,7 @@
           >
             <span class="sidebar-icon">
               <font-awesome-icon :icon="item.icon" />
+              <span v-if="item.name === 'Notificaciones' && cantidadNoLeidas > 0" class="notification-badge">{{ cantidadNoLeidas }}</span>
             </span>
             <span class="sidebar-text">{{ item.name }}</span>
           </router-link>
@@ -41,10 +42,14 @@
 </template>
 
 <script setup lang="ts">
-
 import { useRoute } from 'vue-router';
+import { computed } from 'vue';
+import { useNotificacionesStore } from '@/stores/notificacionesStore';
 
 const route = useRoute();
+const notificacionesStore = useNotificacionesStore();
+// Usamos computed para que se actualice reactivamente
+const cantidadNoLeidas = computed(() => notificacionesStore.cantidadNoLeidas);
 
 // Elementos del menú
 const menuItems = [
@@ -65,5 +70,4 @@ const isActive = (path: string) => {
 
 <style scoped>
 @import '@/assets/styles/dashboards/profesores/sidebar.css';
-
 </style>

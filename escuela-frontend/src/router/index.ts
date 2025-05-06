@@ -30,6 +30,11 @@ const router = createRouter({
           name: 'register',
           component: () => import('@/views/RegisterView.vue'),
         },
+        {
+          path: 'cambiar-contrasena',
+          name: 'change-password',
+          component: () => import('@/views/CambiarPasswordView.vue'),
+        },
       ],
     },
     {
@@ -54,23 +59,23 @@ const router = createRouter({
         {
           path: 'profesores/citas',
           name: 'teacher-appointments',
-          component: () => import('@/components/dashboards/profesores/DashboardHome.vue'), // Placeholder
+          component: () => import('@/components/dashboards/profesores/CitasView.vue'),
         },
         {
           path: 'profesores/material',
           name: 'teacher-materials',
-          component: () => import('@/components/dashboards/profesores/DashboardHome.vue'), // Placeholder
+          component: () => import('@/components/dashboards/profesores/MaterialView.vue'), // Placeholder
         },
         {
           path: 'profesores/notificaciones',
           name: 'teacher-notifications',
-          component: () => import('@/components/dashboards/profesores/DashboardHome.vue'), // Placeholder
+          component: () => import('@/components/dashboards/profesores/NotificacionesView.vue'),
         },
         {
           path: 'profesores/perfil',
           name: 'teacher-profile',
-          component: () => import('@/components/dashboards/profesores/DashboardHome.vue'), // Placeholder
-        },
+          component: () => import('@/components/dashboards/profesores/PerfilView.vue'),
+        }
       ],
     },
   ],

@@ -1,0 +1,547 @@
+.perfil-view {
+  width: 100%;
+}
+
+.perfil-header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.perfil-header h1 {
+  font-size: var(--font-size-3xl);
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-xs);
+}
+
+.current-date {
+  color: var(--text-medium);
+  font-size: var(--font-size-base);
+}
+
+.perfil-sections {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.perfil-section {
+  background-color: var(--bg-light);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  width: 100%;
+}
+
+.perfil-section h2 {
+  font-size: var(--font-size-xl);
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--bg-gray);
+}
+
+/* Estilos para la sección de información personal */
+.info-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.info-item {
+  margin-bottom: var(--spacing-md);
+}
+
+.info-item label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-medium);
+  margin-bottom: var(--spacing-xs);
+}
+
+.info-item p {
+  font-size: var(--font-size-base);
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.lista-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lista-items li {
+  padding: var(--spacing-xs) 0;
+  border-bottom: 1px solid var(--bg-gray);
+  font-size: var(--font-size-base);
+  color: var(--text-dark);
+}
+
+.lista-items li:last-child {
+  border-bottom: none;
+}
+
+/* Estilos para los formularios */
+.form-horarios {
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-lg);
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-light);
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-fast);
+  color: var(--text-dark);
+  background-color: var(--bg-light);
+}
+
+.time-input {
+  padding: 12px;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+}
+
+.form-input:disabled {
+  background-color: var(--bg-gray);
+  cursor: not-allowed;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.security-options {
+  margin-top: var(--spacing-xl);
+  border-top: 1px solid var(--bg-gray);
+  padding-top: var(--spacing-lg);
+}
+
+.security-options h3 {
+  font-size: var(--font-size-lg);
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-md);
+}
+
+.security-button {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--secondary-color);
+  border: none;
+  border-radius: var(--border-radius-md);
+  color: white;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.security-button:hover {
+  background-color: var(--secondary-dark);
+}
+
+.button-icon {
+  margin-right: var(--spacing-sm);
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--spacing-md);
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: var(--border-radius-md);
+  color: white;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.action-button:hover {
+  background-color: var(--primary-dark);
+}
+
+.action-button:disabled {
+  background-color: var(--bg-gray);
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: var(--accent-color);
+  font-size: var(--font-size-xs);
+  margin-top: 4px;
+}
+
+.message {
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+.message.success {
+  background-color: rgba(56, 161, 105, 0.1);
+  color: #2f855a;
+  border: 1px solid #2f855a;
+}
+
+.message.error {
+  background-color: rgba(229, 62, 62, 0.1);
+  color: #c53030;
+  border: 1px solid #c53030;
+}
+
+/* Estilos para la sección de horarios */
+.section-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.section-description {
+  color: var(--text-medium);
+  font-size: var(--font-size-base);
+  margin-top: var(--spacing-xs);
+}
+
+.form-horarios {
+  width: 100%;
+}
+
+.horarios-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.horario-card {
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  width: 180px;
+  margin-bottom: 10px;
+}
+
+.horario-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background-color: #1a365d;
+  color: white;
+  font-size: 13px;
+}
+
+.horario-card-header.inactive {
+  background-color: #4a5568;
+  color: #e2e8f0;
+}
+
+.dia-nombre {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.toggle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 2px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 18px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 18px;
+  margin-right: 6px;
+  transition: all 0.2s ease;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: '';
+  height: 14px;
+  width: 14px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: #4299e1;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(18px);
+}
+
+.toggle-label {
+  font-size: 11px;
+  white-space: nowrap;
+  display: block;
+  text-align: right;
+}
+
+.horario-card-body {
+  padding: 10px;
+}
+
+.horario-card-body.disabled {
+  opacity: 0.6;
+}
+
+.tiempo-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.tiempo-row:last-child {
+  margin-bottom: 0;
+}
+
+.tiempo-label {
+  width: 40px;
+  font-size: 12px;
+  color: #4a5568;
+}
+
+.tiempo-input-wrapper {
+  flex: 1;
+}
+
+.tiempo-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.tiempo-icon {
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  z-index: 1;
+}
+
+.tiempo-input input {
+  width: 100%;
+  padding: 4px 4px 4px 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #2d3748;
+  height: 28px;
+}
+
+.tiempo-input input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 1px #4299e1;
+}
+
+.horarios-footer {
+  margin-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 24px;
+}
+
+.horarios-info {
+  display: flex;
+  align-items: center;
+  background-color: rgba(66, 153, 225, 0.1);
+  padding: 6px 10px;
+  border-radius: 4px;
+  margin: 16px 0 20px 0;
+  font-size: 13px;
+}
+
+.info-icon {
+  color: #4299e1;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.horarios-info span {
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.guardar-horarios {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a365d;
+  color: white;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border: none;
+  font-size: 13px;
+}
+
+.guardar-horarios:hover {
+  background-color: #2c5282;
+}
+
+.button-icon {
+  margin-right: 8px;
+}
+
+/* Estilos para checkbox */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  color: var(--text-dark);
+  user-select: none;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: relative;
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  margin-right: 8px;
+  background-color: var(--bg-light);
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  transition: all var(--transition-fast);
+}
+
+.checkbox-container:hover input ~ .checkmark {
+  border-color: var(--secondary-color);
+}
+
+.checkbox-container input:checked ~ .checkmark {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.checkmark:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Animación de carga */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+  .info-container {
+    grid-template-columns: 1fr;
+  }
+
+  .horario-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .horario-dia {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .horario-horas {
+    width: 100%;
+  }
+}
