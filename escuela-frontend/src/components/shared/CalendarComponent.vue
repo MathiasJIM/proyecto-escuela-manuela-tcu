@@ -1,9 +1,9 @@
 <template>
   <div class="calendar-container">
-    <div class="calendar-header">
-      <h1>Calendario Escolar</h1>
+    <div v-if="showHeader" class="calendar-header">
+      <h1>{{ title }}</h1>
       <div class="calendar-actions">
-        <button class="btn-primary" @click="showEventModal('create')">
+        <button v-if="canCreateEvents" class="btn-primary" @click="showEventModal('create')">
           <font-awesome-icon :icon="['fas', 'plus']" /> Nuevo Evento
         </button>
       </div>
@@ -60,34 +60,25 @@
             </div>
             <div class="form-group form-group-half">
               <label for="event-start-time">Hora de inicio</label>
-              <select
-                id="event-start-time"
-                v-model="eventStartTime"
-                class="form-input time-select"
-              >
-                <option v-for="time in timeOptions" :key="time" :value="time">{{ formatTimeDisplay(time) }}</option>
+              <select id="event-start-time" v-model="eventStartTime" class="form-input time-select">
+                <option v-for="time in timeOptions" :key="time" :value="time">
+                  {{ formatTimeDisplay(time) }}
+                </option>
               </select>
             </div>
           </div>
-          
+
           <div class="form-row">
             <div class="form-group form-group-half">
               <label for="event-end-date">Fecha de fin</label>
-              <input
-                id="event-end-date"
-                v-model="eventEndDate"
-                type="date"
-                class="form-input"
-              />
+              <input id="event-end-date" v-model="eventEndDate" type="date" class="form-input" />
             </div>
             <div class="form-group form-group-half">
               <label for="event-end-time">Hora de fin</label>
-              <select
-                id="event-end-time"
-                v-model="eventEndTime"
-                class="form-input time-select"
-              >
-                <option v-for="time in timeOptions" :key="time" :value="time">{{ formatTimeDisplay(time) }}</option>
+              <select id="event-end-time" v-model="eventEndTime" class="form-input time-select">
+                <option v-for="time in timeOptions" :key="time" :value="time">
+                  {{ formatTimeDisplay(time) }}
+                </option>
               </select>
             </div>
           </div>
@@ -126,15 +117,51 @@
 <script setup lang="ts">
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
-import { useCalendar } from '@/composables/dashboards/profesores/useCalendar'
+import { useCalendar, type Evento } from '@/composables/dashboards/useCalendar'
 
-// Usar el composable de calendario
+// Definir props
+const props = defineProps({
+  userRole: {
+    type: String,
+    default: 'profesor',
+    validator: (value: string) => ['profesor', 'direccion'].includes(value)
+  },
+  canCreateEvents: {
+    type: Boolean,
+    default: true
+  },
+  showHeader: {
+    type: Boolean,
+    default: true
+  },
+  title: {
+    type: String,
+    default: 'Calendario Escolar'
+  }
+})
+
+// Definir emits
+const emit = defineEmits(['event-created', 'event-updated', 'event-deleted'])
+
+// Configurar callbacks para el composable
+const onEventCreated = (event: Evento) => {
+  emit('event-created', event)
+}
+
+const onEventUpdated = (event: Evento) => {
+  emit('event-updated', event)
+}
+
+const onEventDeleted = (event: Evento) => {
+  emit('event-deleted', event)
+}
+
+// Usar el composable de calendario con las opciones y callbacks
 const {
   vuecal,
   showModal,
   modalMode,
   currentEvent,
-  // selectedEventId no se usa directamente en el componente
   eventStartDate,
   eventStartTime,
   eventEndDate,
@@ -149,7 +176,12 @@ const {
   crearEvento,
   actualizarEvento,
   eliminarEvento
-} = useCalendar()
+} = useCalendar({
+  userRole: props.userRole,
+  onEventCreated,
+  onEventUpdated,
+  onEventDeleted
+})
 </script>
 
 <style>

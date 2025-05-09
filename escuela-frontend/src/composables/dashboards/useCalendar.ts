@@ -8,9 +8,22 @@ export interface Evento {
   title: string
   content?: string
   class?: string
+  createdBy?: string
 }
 
-export function useCalendar() {
+// Tipo para los callbacks de eventos
+export type EventCallback = (event: Evento) => void
+
+// Opciones para el composable
+export interface CalendarOptions {
+  userRole?: string
+  onEventCreated?: EventCallback
+  onEventUpdated?: EventCallback
+  onEventDeleted?: EventCallback
+}
+
+export function useCalendar(options: CalendarOptions = {}) {
+  const { userRole = 'profesor', onEventCreated, onEventUpdated, onEventDeleted } = options
   // Estado del calendario
   const vuecal = ref(null)
   const showModal = ref(false)
@@ -48,7 +61,8 @@ export function useCalendar() {
       end: new Date(new Date().setHours(12, 0, 0, 0)).toISOString(),
       title: 'Reunión de profesores',
       content: 'Discusión sobre el plan de estudios del próximo trimestre',
-      class: 'event-blue'
+      class: 'event-blue',
+      createdBy: 'direccion'
     },
     {
       id: 2,
@@ -56,7 +70,8 @@ export function useCalendar() {
       end: new Date(new Date().setDate(new Date().getDate() + 1)).setHours(10, 30, 0, 0).toString(),
       title: 'Entrega de notas',
       content: 'Entrega de calificaciones del primer trimestre',
-      class: 'event-green'
+      class: 'event-green',
+      createdBy: 'direccion'
     },
     {
       id: 3,
@@ -64,7 +79,8 @@ export function useCalendar() {
       end: new Date(new Date().setDate(new Date().getDate() + 2)).setHours(15, 30, 0, 0).toString(),
       title: 'Reunión con padres',
       content: 'Atención a padres de familia para discutir el progreso de los estudiantes',
-      class: 'event-orange'
+      class: 'event-orange',
+      createdBy: 'profesor'
     }
   ])
 
@@ -136,7 +152,7 @@ export function useCalendar() {
   function saveEvent() {
     if (!currentEvent.title) {
       alert('Por favor ingrese un título para el evento')
-      return
+      return false
     }
     
     // Combinar fecha y hora para crear timestamps ISO
@@ -146,7 +162,7 @@ export function useCalendar() {
     // Validar que la fecha de fin sea posterior a la de inicio
     if (endDateTime <= startDateTime) {
       alert('La fecha y hora de fin debe ser posterior a la fecha y hora de inicio')
-      return
+      return false
     }
     
     if (modalMode.value === 'create') {
@@ -157,11 +173,17 @@ export function useCalendar() {
         end: endDateTime.toISOString(),
         title: currentEvent.title,
         content: currentEvent.content,
-        class: currentEvent.class
+        class: currentEvent.class,
+        createdBy: userRole
       }
       
       eventos.value.push(newEvent)
       console.log('Evento creado:', newEvent)
+      
+      // Llamar al callback si existe
+      if (onEventCreated) {
+        onEventCreated(newEvent)
+      }
     } else {
       // Actualizar un evento existente
       const index = eventos.value.findIndex(e => e.id === selectedEventId.value)
@@ -177,10 +199,16 @@ export function useCalendar() {
         
         eventos.value[index] = updatedEvent
         console.log('Evento actualizado:', updatedEvent)
+        
+        // Llamar al callback si existe
+        if (onEventUpdated) {
+          onEventUpdated(updatedEvent)
+        }
       }
     }
     
     closeModal()
+    return true
   }
 
   // Función para manejar el clic en un evento
@@ -191,12 +219,43 @@ export function useCalendar() {
 
   // Funciones requeridas para interactuar con vue-cal
   function crearEvento(event: Evento) {
-    console.log('Evento creado:', event)
-    return event
+    // Añadir información del creador
+    const newEvent = {
+      ...event,
+      createdBy: userRole
+    }
+    
+    // Añadir al array de eventos
+    eventos.value.push(newEvent)
+    console.log('Evento creado:', newEvent)
+    
+    // Llamar al callback si existe
+    if (onEventCreated) {
+      onEventCreated(newEvent)
+    }
+    
+    return newEvent
   }
 
   function actualizarEvento(event: Evento, oldEvent: Evento) {
-    console.log('Evento actualizado:', event, 'Evento anterior:', oldEvent)
+    // Actualizar el evento en el array
+    const index = eventos.value.findIndex(e => e.id === event.id)
+    if (index !== -1) {
+      const updatedEvent = {
+        ...event,
+        // Mantener el creador original
+        createdBy: eventos.value[index].createdBy || userRole
+      }
+      eventos.value[index] = updatedEvent
+      console.log('Evento actualizado:', updatedEvent, 'Evento anterior:', oldEvent)
+      
+      // Llamar al callback si existe
+      if (onEventUpdated) {
+        onEventUpdated(updatedEvent)
+      }
+      
+      return updatedEvent
+    }
     return event
   }
 
@@ -206,7 +265,13 @@ export function useCalendar() {
     // Eliminar el evento del array
     const index = eventos.value.findIndex(e => e.id === event.id)
     if (index !== -1) {
+      const deletedEvent = eventos.value[index]
       eventos.value.splice(index, 1)
+      
+      // Llamar al callback si existe
+      if (onEventDeleted) {
+        onEventDeleted(deletedEvent)
+      }
     }
   }
 

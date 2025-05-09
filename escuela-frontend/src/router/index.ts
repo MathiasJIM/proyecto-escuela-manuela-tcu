@@ -13,7 +13,6 @@ const router = createRouter({
           name: 'landing',
           component: LandingPage,
         },
-
       ],
     },
     {
@@ -39,43 +38,124 @@ const router = createRouter({
     },
     {
       path: '/dashboard',
-      component: () => import('@/components/layout/DashboardLayout.vue'),
+      component: () => import('@/views/dashboard/profesores/ProfesoresLayout.vue'),
       children: [
         {
           path: 'profesores/inicio',
           name: 'teacher-dashboard',
-          component: () => import('@/components/dashboards/profesores/DashboardHome.vue'),
+          component: () => import('@/views/dashboard/profesores/InicioView.vue'),
         },
         {
           path: 'profesores/asistencia',
           name: 'teacher-attendance',
-          component: () => import('@/components/dashboards/profesores/AttendanceView.vue'),
+          component: () => import('@/views/dashboard/profesores/AttendanceView.vue'),
         },
         {
           path: 'profesores/calendario',
           name: 'teacher-calendar',
-          component: () => import('@/components/dashboards/profesores/CalendarView.vue'),
+          component: () => import('@/views/dashboard/profesores/CalendarView.vue'),
         },
         {
           path: 'profesores/citas',
           name: 'teacher-appointments',
-          component: () => import('@/components/dashboards/profesores/CitasView.vue'),
+          component: () => import('@/views/dashboard/profesores/CitasView.vue'),
         },
         {
           path: 'profesores/material',
           name: 'teacher-materials',
-          component: () => import('@/components/dashboards/profesores/MaterialView.vue'), // Placeholder
+          component: () => import('@/views/dashboard/profesores/MaterialView.vue'), 
         },
         {
           path: 'profesores/notificaciones',
           name: 'teacher-notifications',
-          component: () => import('@/components/dashboards/profesores/NotificacionesView.vue'),
+          component: () => import('@/views/dashboard/profesores/NotificacionesView.vue'),
         },
         {
           path: 'profesores/perfil',
           name: 'teacher-profile',
-          component: () => import('@/components/dashboards/profesores/PerfilView.vue'),
-        }
+          component: () => import('@/views/dashboard/profesores/PerfilView.vue'),
+        },
+      ],
+    },
+    {
+      path: '/dashboard/direccion',
+      component: () => import('@/views/dashboard/direccion/DireccionLayout.vue'),
+      children: [
+        {
+          path: 'inicio',
+          name: 'direccion-inicio',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'),
+        },
+        {
+          path: 'usuarios/profesores',
+          name: 'direccion-profesores',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+        },
+        {
+          path: 'usuarios/estudiantes',
+          name: 'direccion-estudiantes',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+        },
+        {
+          path: 'usuarios/padres',
+          name: 'direccion-padres',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+        },
+        {
+          path: 'anios/ver',
+          name: 'direccion-anios-ver',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+        },
+        {
+          path: 'anios/crear',
+          name: 'direccion-anios-crear',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+        },
+        {
+          path: 'anios/promocionar',
+          name: 'direccion-anios-promocionar',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+        },
+        {
+          path: 'secciones',
+          name: 'direccion-secciones',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+        },
+        {
+          path: 'materias',
+          name: 'direccion-materias',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+        },
+        {
+          path: 'documentos',
+          name: 'direccion-documentos',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+        },
+        {
+          path: 'avisos',
+          name: 'direccion-avisos',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+        },
+        {
+          path: 'reportes',
+          name: 'direccion-reportes',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+        },
+        {
+          path: 'calendario',
+          name: 'direccion-calendario',
+          component: () => import('@/views/dashboard/direccion/CalendarView.vue'), 
+        },
+        {
+          path: 'notificaciones',
+          name: 'direccion-notificaciones',
+          component: () => import('@/views/dashboard/direccion/NotificacionesView.vue'), 
+        },
+        {
+          path: 'perfil',
+          name: 'direccion-perfil',
+          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+        },
       ],
     },
   ],

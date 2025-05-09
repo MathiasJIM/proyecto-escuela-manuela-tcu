@@ -14,8 +14,11 @@ import {
   faCalendarAlt,
   faUsers,
   faBook,
+  faBookOpen,
   faBell,
   faUser,
+  faUserTie,
+  faGraduationCap,
   faSignOutAlt,
   faClock,
   faCheck,
@@ -25,11 +28,20 @@ import {
   faSearch,
   faInfoCircle,
   faChevronDown,
+  faChevronRight,
   faLocationDot,
   faPhone,
   faDirections,
   faEnvelope,
-  faLock
+  faLock,
+  faFolder,
+  faBullhorn,
+  faChartBar,
+  faTableCellsLarge,
+  faCalendar,
+  faPlus,
+  faArrowUp,
+  faEye as faSolidEye
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -50,7 +62,7 @@ import {
 import App from './App.vue'
 import router from './router'
 
-// Add icons to the library
+// Agregamos los iconos a la biblioteca
 library.add(
   faBars,
   faXmark,
@@ -59,8 +71,11 @@ library.add(
   faCalendarAlt,
   faUsers,
   faBook,
+  faBookOpen,
   faBell,
   faUser,
+  faUserTie,
+  faGraduationCap,
   faSignOutAlt,
   faClock,
   faCheck,
@@ -70,11 +85,20 @@ library.add(
   faSearch,
   faInfoCircle,
   faChevronDown,
+  faChevronRight,
   faLocationDot,
   faPhone,
   faDirections,
   faEnvelope,
   faLock,
+  faFolder,
+  faBullhorn,
+  faChartBar,
+  faTableCellsLarge,
+  faCalendar,
+  faPlus,
+  faArrowUp,
+  faSolidEye,
   faFacebookSquare,
   faFacebook,
   farEnvelope,

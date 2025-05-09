@@ -1,15 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-
-// Interfaces
-export interface Notificacion {
-  id: number
-  titulo: string
-  mensaje: string
-  fecha: Date
-  tipo: 'sistema' | 'cita' | 'material' | 'calendario'
-  leida: boolean
-}
+import type { Notificacion } from '@/composables/dashboards/useNotificaciones'
 
 export const useNotificacionesStore = defineStore('notificaciones', () => {
   // Estado
@@ -20,7 +11,11 @@ export const useNotificacionesStore = defineStore('notificaciones', () => {
       mensaje: 'El padre de María Rodríguez ha solicitado una cita para el próximo viernes.',
       fecha: new Date(2025, 4, 2, 14, 30), // 2 de mayo de 2025, 14:30
       tipo: 'cita',
-      leida: false
+      leida: false,
+      destinatarios: ['profesor'],
+      accionable: true,
+      accionTexto: 'Ver detalles de la cita',
+      accionIcono: 'calendar-alt'
     },
     {
       id: 2,
@@ -28,7 +23,8 @@ export const useNotificacionesStore = defineStore('notificaciones', () => {
       mensaje: 'Recuerde que debe entregar las notas del primer trimestre antes del 15 de mayo.',
       fecha: new Date(2025, 4, 1, 9, 15), // 1 de mayo de 2025, 9:15
       tipo: 'sistema',
-      leida: false
+      leida: false,
+      destinatarios: ['profesor', 'direccion']
     },
     {
       id: 3,
@@ -36,7 +32,11 @@ export const useNotificacionesStore = defineStore('notificaciones', () => {
       mensaje: 'Se ha añadido nuevo material didáctico para el curso de matemáticas.',
       fecha: new Date(2025, 3, 30, 11, 45), // 30 de abril de 2025, 11:45
       tipo: 'material',
-      leida: true
+      leida: true,
+      destinatarios: ['profesor'],
+      accionable: true,
+      accionTexto: 'Ver material',
+      accionIcono: 'book'
     },
     {
       id: 4,
@@ -44,7 +44,11 @@ export const useNotificacionesStore = defineStore('notificaciones', () => {
       mensaje: 'Recordatorio de la reunión de profesores programada para mañana a las 3:00 PM.',
       fecha: new Date(2025, 3, 28, 16, 0), // 28 de abril de 2025, 16:00
       tipo: 'calendario',
-      leida: true
+      leida: true,
+      destinatarios: ['profesor', 'direccion'],
+      accionable: true,
+      accionTexto: 'Ver en calendario',
+      accionIcono: 'calendar-alt'
     },
     {
       id: 5,
@@ -52,7 +56,32 @@ export const useNotificacionesStore = defineStore('notificaciones', () => {
       mensaje: 'El sistema se actualizará esta noche a las 22:00. Podría experimentar interrupciones temporales.',
       fecha: new Date(2025, 3, 25, 10, 30), // 25 de abril de 2025, 10:30
       tipo: 'sistema',
-      leida: true
+      leida: true,
+      destinatarios: ['todos']
+    },
+    {
+      id: 6,
+      titulo: 'Alerta: Cierre por emergencia',
+      mensaje: 'Debido a condiciones climáticas adversas, la escuela permanecerá cerrada mañana.',
+      fecha: new Date(2025, 4, 5, 18, 0), // 5 de mayo de 2025, 18:00
+      tipo: 'alerta',
+      leida: false,
+      destinatarios: ['todos'],
+      accionable: true,
+      accionTexto: 'Ver detalles',
+      accionIcono: 'exclamation-triangle'
+    },
+    {
+      id: 7,
+      titulo: 'Mensaje de la dirección',
+      mensaje: 'Se solicita a todos los profesores enviar sus planificaciones para el próximo mes.',
+      fecha: new Date(2025, 4, 4, 10, 15), // 4 de mayo de 2025, 10:15
+      tipo: 'mensaje',
+      leida: false,
+      destinatarios: ['profesor'],
+      accionable: true,
+      accionTexto: 'Responder',
+      accionIcono: 'reply'
     }
   ])
 
