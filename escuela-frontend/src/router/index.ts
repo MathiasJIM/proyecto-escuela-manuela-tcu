@@ -89,17 +89,17 @@ const router = createRouter({
         {
           path: 'usuarios/profesores',
           name: 'direccion-profesores',
-          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+          component: () => import('@/views/dashboard/direccion/GestiónProfesoresView.vue'), 
         },
         {
           path: 'usuarios/estudiantes',
           name: 'direccion-estudiantes',
-          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+          component: () => import('@/views/dashboard/direccion/GestionEstudiantesView.vue'), 
         },
         {
           path: 'usuarios/padres',
           name: 'direccion-padres',
-          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+          component: () => import('@/views/dashboard/direccion/GestionPadresView.vue'), 
         },
         {
           path: 'anios/ver',
