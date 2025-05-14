@@ -41,7 +41,8 @@ import {
   faCalendar,
   faPlus,
   faArrowUp,
-  faEye as faSolidEye
+  faEye as faSolidEye,
+  faCog
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -99,6 +100,7 @@ library.add(
   faPlus,
   faArrowUp,
   faSolidEye,
+  faCog,
   faFacebookSquare,
   faFacebook,
   farEnvelope,

@@ -104,42 +104,66 @@ const router = createRouter({
         {
           path: 'anios/ver',
           name: 'direccion-anios-ver',
-          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+          component: () => import('@/views/dashboard/direccion/VerAniosView.vue'), 
         },
         {
           path: 'anios/crear',
           name: 'direccion-anios-crear',
-          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+          component: () => import('@/views/dashboard/direccion/CrearAnioView.vue'), 
         },
         {
           path: 'anios/promocionar',
           name: 'direccion-anios-promocionar',
-          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+          component: () => import('@/views/dashboard/direccion/PromocionarEstudiantesView.vue'), 
         },
         {
           path: 'secciones',
           name: 'direccion-secciones',
-          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+          component: () => import('@/views/dashboard/direccion/SeccionesView.vue'), 
         },
         {
           path: 'materias',
           name: 'direccion-materias',
-          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+          component: () => import('@/views/dashboard/direccion/MateriasView.vue'), 
+        },
+        {
+          path: 'horarios',
+          children: [
+            {
+              path: '',
+              redirect: { name: 'direccion-horarios-ver' }
+            },
+            {
+              path: 'ver',
+              name: 'direccion-horarios-ver',
+              component: () => import('@/views/dashboard/direccion/VerHorarioView.vue'), 
+            },
+            {
+              path: 'gestion',
+              name: 'direccion-horarios-gestion',
+              component: () => import('@/views/dashboard/direccion/GestionHorario.vue'), 
+            }
+          ]
         },
         {
           path: 'documentos',
           name: 'direccion-documentos',
-          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+          component: () => import('@/views/dashboard/direccion/DocumentosView.vue'), 
         },
         {
           path: 'avisos',
           name: 'direccion-avisos',
-          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+          component: () => import('@/views/dashboard/direccion/AvisosView.vue'), 
+        },
+        {
+          path: 'perfil',
+          name: 'direccion-perfil',
+          component: () => import('@/views/dashboard/direccion/PerfilUsuarioView.vue'), 
         },
         {
           path: 'reportes',
           name: 'direccion-reportes',
-          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
+          component: () => import('@/views/dashboard/direccion/ReportesView.vue'), 
         },
         {
           path: 'calendario',
@@ -150,11 +174,6 @@ const router = createRouter({
           path: 'notificaciones',
           name: 'direccion-notificaciones',
           component: () => import('@/views/dashboard/direccion/NotificacionesView.vue'), 
-        },
-        {
-          path: 'perfil',
-          name: 'direccion-perfil',
-          component: () => import('@/views/dashboard/direccion/InicioView.vue'), 
         },
       ],
     },

@@ -1,214 +1,453 @@
 <template>
-  <div class="inicio-direccion">
-    <h1 class="page-title">Dashboard de Dirección</h1>
-    <div class="dashboard-content">
-      <div class="welcome-card">
-        <h2>Bienvenido/a al Portal de Dirección</h2>
-        <p>Desde aquí podrá gestionar todos los aspectos administrativos de la escuela.</p>
-      </div>
-      
-      <div class="dashboard-stats">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <font-awesome-icon icon="fa-user-tie" />
-          </div>
-          <div class="stat-info">
-            <h3>Profesores</h3>
-            <p class="stat-value">12</p>
-          </div>
+  <div class="dashboard-home">
+    <header class="dashboard-header">
+      <h1>Bienvenido/a al Portal Administrativo</h1>
+      <p class="current-date">{{ formattedDate }}</p>
+    </header>
+    
+    <div class="dashboard-cards">
+      <div class="dashboard-card" @click="navigateTo('/dashboard/direccion/calendario')">
+        <div class="card-icon calendar">
+          <font-awesome-icon :icon="['fas', 'calendar-alt']" size="lg" />
         </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon">
-            <font-awesome-icon icon="fa-graduation-cap" />
-          </div>
-          <div class="stat-info">
-            <h3>Estudiantes</h3>
-            <p class="stat-value">245</p>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon">
-            <font-awesome-icon icon="fa-users" />
-          </div>
-          <div class="stat-info">
-            <h3>Padres</h3>
-            <p class="stat-value">180</p>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-icon">
-            <font-awesome-icon icon="fa-book-open" />
-          </div>
-          <div class="stat-info">
-            <h3>Materias</h3>
-            <p class="stat-value">18</p>
-          </div>
+        <div class="card-content">
+          <h3>Calendario</h3>
+          <p>Ver eventos próximos</p>
         </div>
       </div>
       
-      <div class="quick-actions">
-        <h2>Acciones Rápidas</h2>
-        <div class="actions-grid">
-          <button class="action-button">
-            <font-awesome-icon icon="fa-user-plus" />
-            <span>Nuevo Profesor</span>
-          </button>
-          <button class="action-button">
-            <font-awesome-icon icon="fa-user-graduate" />
-            <span>Nuevo Estudiante</span>
-          </button>
-          <button class="action-button">
-            <font-awesome-icon icon="fa-bullhorn" />
-            <span>Crear Aviso</span>
-          </button>
-          <button class="action-button">
-            <font-awesome-icon icon="fa-file-alt" />
-            <span>Generar Reporte</span>
-          </button>
+      <div class="dashboard-card" @click="navigateTo('/dashboard/direccion/documentos')">
+        <div class="card-icon material">
+          <font-awesome-icon :icon="['fas', 'folder']" size="lg" />
+        </div>
+        <div class="card-content">
+          <h3>Documentos</h3>
+          <p>Gestionar documentos</p>
         </div>
       </div>
+      
+      <div class="dashboard-card" @click="navigateTo('/dashboard/direccion/avisos')">
+        <div class="card-icon notification">
+          <font-awesome-icon :icon="['fas', 'bell']" size="lg" />
+        </div>
+        <div class="card-content">
+          <h3>Avisos</h3>
+          <p>{{ estadisticas.avisos }} avisos nuevos</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="dashboard-sections">
+      <section class="upcoming-events">
+        <h2>Próximos Eventos</h2>
+        <div class="event-list">
+          <div class="event-item" v-for="(evento, index) in eventos" :key="index">
+            <div class="event-date">
+              <span class="event-day">{{ evento.dia }}</span>
+              <span class="event-month">{{ evento.mes }}</span>
+            </div>
+            <div class="event-details">
+              <h4>{{ evento.titulo }}</h4>
+              <p>{{ evento.horario }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="recent-notifications">
+        <h2>Notificaciones Recientes</h2>
+        <div class="notification-list">
+          <div class="notification-item" v-for="(notificacion, index) in notificaciones" :key="index" :class="{ unread: notificacion.noLeida }">
+            <div class="notification-icon">
+              <font-awesome-icon :icon="notificacion.icono" />
+            </div>
+            <div class="notification-content">
+              <h4>{{ notificacion.titulo }}</h4>
+              <p>{{ notificacion.descripcion }}</p>
+              <span class="notification-time">{{ notificacion.tiempo }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// Aquí iría la lógica del componente
+import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+interface Estadisticas {
+  profesores: number;
+  estudiantes: number;
+  padres: number;
+  materias: number;
+  avisos: number;
+}
+
+interface Evento {
+  dia: number;
+  mes: string;
+  titulo: string;
+  horario: string;
+}
+
+interface Notificacion {
+  titulo: string;
+  descripcion: string;
+  tiempo: string;
+  icono: string[];
+  noLeida: boolean;
+}
+
+// Estado
+const estadisticas = ref<Estadisticas>({
+  profesores: 12,
+  estudiantes: 345,
+  padres: 420,
+  materias: 24,
+  avisos: 3
+});
+
+const eventos = ref<Evento[]>([
+  {
+    dia: 15,
+    mes: 'Mayo',
+    titulo: 'Reunión de Padres',
+    horario: '2:00 PM - 4:00 PM'
+  },
+  {
+    dia: 20,
+    mes: 'Mayo',
+    titulo: 'Entrega de Notas',
+    horario: '9:00 AM - 12:00 PM'
+  },
+  {
+    dia: 25,
+    mes: 'Mayo',
+    titulo: 'Acto Cívico',
+    horario: '8:00 AM - 9:30 AM'
+  }
+]);
+
+const notificaciones = ref<Notificacion[]>([
+  {
+    titulo: 'Reunión de personal',
+    descripcion: 'Se ha programado una reunión de personal para el viernes a las 3:00 PM.',
+    tiempo: 'Hace 2 horas',
+    icono: ['fas', 'user-tie'],
+    noLeida: true
+  },
+  {
+    titulo: 'Nueva solicitud de cita',
+    descripcion: 'Un padre ha solicitado una cita para el próximo martes.',
+    tiempo: 'Hace 5 horas',
+    icono: ['fas', 'calendar-alt'],
+    noLeida: true
+  },
+  {
+    titulo: 'Recordatorio de entrega',
+    descripcion: 'Recuerde entregar las calificaciones del primer trimestre antes del viernes.',
+    tiempo: 'Ayer',
+    icono: ['fas', 'bell'],
+    noLeida: false
+  }
+]);
+
+// Fecha actual formateada
+const formattedDate = computed(() => {
+  const now = new Date();
+  const options: Intl.DateTimeFormatOptions = { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  };
+  return now.toLocaleDateString('es-ES', options);
+});
+
+// Navegación
+const navigateTo = (path: string) => {
+  router.push(path);
+};
+
+// Cargar datos
+onMounted(() => {
+  // En producción, aquí se cargarían los datos desde la API
+  // Por ahora usamos datos estáticos
+});
 </script>
 
 <style scoped>
-.inicio-direccion {
-  padding: var(--spacing-lg);
+/* Estilos generales */
+.dashboard-home {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.page-title {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--text-color-dark);
-  margin-bottom: var(--spacing-lg);
+.dashboard-header {
+  margin-bottom: 24px;
 }
 
-.dashboard-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
+.dashboard-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 5px 0;
 }
 
-.welcome-card {
-  background-color: white;
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-sm);
+.current-date {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
 }
 
-.welcome-card h2 {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--primary-color);
-  margin-top: 0;
-  margin-bottom: var(--spacing-sm);
-}
-
-.dashboard-stats {
+/* Tarjetas de acciones */
+.dashboard-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: var(--spacing-md);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
-.stat-card {
+.dashboard-card {
   background-color: white;
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  box-shadow: var(--shadow-sm);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 20px;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.stat-icon {
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
   width: 50px;
   height: 50px;
-  border-radius: 50%;
-  background-color: var(--primary-color-light);
-  color: var(--primary-color);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-lg);
-  margin-right: var(--spacing-md);
+  margin-right: 15px;
+  flex-shrink: 0;
 }
 
-.stat-info {
+.attendance {
+  background-color: #e0f2fe;
+  color: #0284c7;
+}
+
+.calendar {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.material {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.notification {
+  background-color: #f3e8ff;
+  color: #7e22ce;
+}
+
+.card-content {
   flex: 1;
 }
 
-.stat-info h3 {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-color-muted);
+.card-content h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 5px 0;
+}
+
+.card-content p {
+  font-size: 14px;
+  color: #64748b;
   margin: 0;
 }
 
-.stat-value {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--text-color-dark);
-  margin: 0;
-}
-
-.quick-actions {
-  background-color: white;
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-sm);
-}
-
-.quick-actions h2 {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--primary-color);
-  margin-top: 0;
-  margin-bottom: var(--spacing-md);
-}
-
-.actions-grid {
+/* Secciones del dashboard */
+.dashboard-sections {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--spacing-md);
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
-.action-button {
+.upcoming-events, .recent-notifications {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.upcoming-events h2, .recent-notifications h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 20px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Eventos */
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.event-item {
+  display: flex;
+  align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.event-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.event-date {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-md);
-  background-color: var(--primary-color-light);
-  color: var(--primary-color);
-  border: none;
-  border-radius: var(--border-radius-md);
-  cursor: pointer;
-  transition: all var(--transition-fast);
+  width: 60px;
+  height: 60px;
+  background-color: #f1f5f9;
+  border-radius: 8px;
+  margin-right: 15px;
+  flex-shrink: 0;
 }
 
-.action-button:hover {
-  background-color: var(--primary-color);
-  color: white;
+.event-day {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1;
 }
 
-.action-button svg {
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--spacing-sm);
+.event-month {
+  font-size: 12px;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.event-details {
+  flex: 1;
+}
+
+.event-details h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 5px 0;
+}
+
+.event-details p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Notificaciones */
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e2e8f0;
+  opacity: 0.7;
+}
+
+.notification-item.unread {
+  opacity: 1;
+}
+
+.notification-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.notification-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-content h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 5px 0;
+}
+
+.notification-content p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 5px 0;
+  line-height: 1.4;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #94a3b8;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .dashboard-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
-  .dashboard-stats {
-    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+  .dashboard-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-cards {
+    grid-template-columns: 1fr;
   }
   
-  .actions-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+  .dashboard-card {
+    padding: 15px;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 20px;
   }
 }
 </style>

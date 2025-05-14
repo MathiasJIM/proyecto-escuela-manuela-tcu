@@ -136,6 +136,51 @@
             </li>
           </ul>
         </li>
+        <!-- Horarios -->
+        <li class="menu-item">
+          <div 
+            @click="toggleSubmenu('horarios')" 
+            class="submenu-toggle"
+            :class="{ 'active': isSubmenuActive('horarios') }"
+          >
+            <div class="toggle-content">
+              <span class="icon">
+                <font-awesome-icon icon="fa-clock" />
+              </span>
+              <span class="text">Horarios</span>
+            </div>
+            <span class="toggle-arrow">
+              <font-awesome-icon :icon="submenuStates.horarios ? 'fa-chevron-down' : 'fa-chevron-right'" />
+            </span>
+          </div>
+          
+          <ul class="submenu" :class="{ 'open': submenuStates.horarios }">
+            <li class="submenu-item">
+              <router-link 
+                to="/dashboard/direccion/horarios/ver" 
+                class="submenu-link"
+                :class="{ 'active': isActive('/dashboard/direccion/horarios/ver') }"
+              >
+                <span class="submenu-icon">
+                  <font-awesome-icon icon="fa-eye" />
+                </span>
+                <span class="submenu-text">Ver Horarios</span>
+              </router-link>
+            </li>
+            <li class="submenu-item">
+              <router-link 
+                to="/dashboard/direccion/horarios/gestion" 
+                class="submenu-link"
+                :class="{ 'active': isActive('/dashboard/direccion/horarios/gestion') }"
+              >
+                <span class="submenu-icon">
+                  <font-awesome-icon icon="fa-cog" />
+                </span>
+                <span class="submenu-text">Gestión de Horarios</span>
+              </router-link>
+            </li>
+          </ul>
+        </li>
         
         <!-- Secciones -->
         <li class="menu-item">
@@ -164,6 +209,9 @@
             <span class="text">Materias</span>
           </router-link>
         </li>
+
+        <!-- Horarios -->
+
         
         <!-- Documentos -->
         <li class="menu-item">
@@ -288,7 +336,8 @@ const nombreUsuario = ref('Nombre Director/a');
 
 const submenuStates = ref({
   usuarios: false,
-  anios: false
+  anios: false,
+  horarios: false
 });
 
 const cantidadNoLeidas = computed(() => notificacionesStore.cantidadNoLeidas);
@@ -301,6 +350,8 @@ const isSubmenuActive = (submenu: string) => {
     return route.path.includes('/dashboard/direccion/usuarios/');
   } else if (submenu === 'anios') {
     return route.path.includes('/dashboard/direccion/anios/');
+  } else if (submenu === 'horarios') {
+    return route.path.includes('/dashboard/direccion/horarios/');
   }
   return false;
 };

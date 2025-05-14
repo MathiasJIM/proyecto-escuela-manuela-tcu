@@ -319,6 +319,36 @@
 
 <style scoped>
 @import '@/assets/styles/dashboards/direccion/gestionestudiantes.css';
+
+/* Estilos específicos para corregir el ancho */
+.search-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 20px auto;
+}
+
+.table-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Corregir posición del botón de agregar */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 20px auto;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
 </style>
 
 <script setup lang="ts">
