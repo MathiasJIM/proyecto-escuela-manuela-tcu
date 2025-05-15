@@ -42,7 +42,8 @@ import {
   faPlus,
   faArrowUp,
   faEye as faSolidEye,
-  faCog
+  faCog,
+  faDownload
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -89,6 +90,7 @@ library.add(
   faChevronRight,
   faLocationDot,
   faPhone,
+  faDownload,
   faDirections,
   faEnvelope,
   faLock,

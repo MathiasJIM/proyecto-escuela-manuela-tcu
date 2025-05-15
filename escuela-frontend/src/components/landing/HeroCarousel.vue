@@ -1,8 +1,25 @@
 <template>
   <div class="hero-container">
     <div class="hero-image-container">
-      <img src="@/assets/images/imagen-de-la-escuela.png" alt="Escuela Manuela Santamarca" class="hero-image" />
+      <!-- Imagen actual visible -->
+      <img 
+        v-for="(image, index) in images" 
+        :key="index"
+        :src="getImageUrl(image)" 
+        :alt="`Escuela Manuela Santamarca - Imagen ${index + 1}`" 
+        class="hero-image" 
+        :class="{ 'active': index === currentImageIndex }" 
+      />
       <div class="hero-overlay">
+        <div class="carousel-indicators">
+          <span 
+            v-for="(image, index) in images" 
+            :key="index" 
+            class="indicator" 
+            :class="{ active: index === currentImageIndex }" 
+            @click="setCurrentImage(index)"
+          ></span>
+        </div>
       </div>
     </div>
     
@@ -44,7 +61,74 @@
 </template>
 
 <script setup lang="ts">
-// No refs needed for icons since we're using inline SVGs
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+
+// Importar imágenes estáticamente
+import imagenEscuela from '@/assets/images/imagen-de-la-escuela.png';
+import escuelaImage1 from '@/assets/images/escuela-image1.webp';
+import escuelaImage2 from '@/assets/images/escuela-image2.webp';
+import escuelaNinos from '@/assets/images/escuela-ninos.jpg';
+import escuelaNinos1 from '@/assets/images/escuela-ninos1.webp';
+
+// Array de imágenes para el carrusel
+const images = [
+  'imagen-de-la-escuela.png',
+  'escuela-image1.webp',
+  'escuela-image2.webp',
+  'escuela-ninos.jpg',
+  'escuela-ninos1.webp'
+];
+
+// Mapeo de nombres de archivo a importaciones
+const imageMap: Record<string, string> = {
+  'imagen-de-la-escuela.png': imagenEscuela,
+  'escuela-image1.webp': escuelaImage1,
+  'escuela-image2.webp': escuelaImage2,
+  'escuela-ninos.jpg': escuelaNinos,
+  'escuela-ninos1.webp': escuelaNinos1
+};
+
+// Función para obtener la URL de la imagen
+const getImageUrl = (imageName: string): string => {
+  return imageMap[imageName];
+};
+
+const currentImageIndex = ref(0);
+let intervalId: number | null = null;
+
+// Función para cambiar a la siguiente imagen
+const nextImage = () => {
+  currentImageIndex.value = (currentImageIndex.value + 1) % images.length;
+};
+
+// Función para establecer una imagen específica
+const setCurrentImage = (index: number) => {
+  currentImageIndex.value = index;
+  // Reiniciar el temporizador cuando se cambia manualmente
+  if (intervalId !== null) {
+    clearInterval(intervalId);
+    startCarousel();
+  }
+};
+
+// Función para iniciar el carrusel automático
+const startCarousel = () => {
+  intervalId = window.setInterval(() => {
+    nextImage();
+  }, 10000); // Cambiar cada 10 segundos
+};
+
+// Iniciar el carrusel cuando el componente se monta
+onMounted(() => {
+  startCarousel();
+});
+
+// Limpiar el intervalo cuando el componente se desmonta
+onBeforeUnmount(() => {
+  if (intervalId !== null) {
+    clearInterval(intervalId);
+  }
+});
 </script>
 
 <style scoped>

@@ -372,3 +372,153 @@
   padding: 12px;
   text-align: center;
 }
+
+/* Estilos personalizados para el navbar mejorado */
+
+/* Navbar principal */
+.navbar {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  height: auto;
+}
+
+.navbar-container {
+  height: 90px;
+  transition: height 0.3s ease;
+}
+
+/* Estilos para el navbar cuando se hace scroll */
+.navbar.scrolled {
+  background-color: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  height: auto;
+}
+
+.navbar.scrolled .navbar-container {
+  height: 70px;
+}
+
+/* Logo */
+.logo img {
+  height: 70px;
+  transition: height 0.3s ease;
+}
+
+.navbar.scrolled .logo img {
+  height: 55px;
+}
+
+/* Links de navegación */
+.nav-items {
+  gap: 1.5rem;
+}
+
+.nav-link {
+  position: relative;
+  font-weight: 500;
+  padding: 0.5rem 0;
+  transition: all 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+.nav-link.active {
+  color: var(--primary-color);
+}
+
+/* Botón de portal */
+.portal-link {
+  background-color: var(--primary-color);
+  color: white !important;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.portal-link:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.portal-link::after {
+  display: none;
+}
+
+.portal-icon {
+  transition: transform 0.3s ease;
+}
+
+.portal-link:hover .portal-icon {
+  transform: translateX(3px);
+}
+
+/* Menú móvil */
+.mobile-menu {
+  background-color: white;
+}
+
+.mobile-nav-link {
+  position: relative;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+  padding-left: 1rem;
+}
+
+.mobile-nav-link.active {
+  color: var(--primary-color);
+  border-left-color: var(--primary-color);
+  background-color: rgba(var(--primary-color-rgb), 0.05);
+}
+
+.portal-mobile-link {
+  margin-top: 1rem;
+  background-color: var(--primary-color);
+  color: white !important;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+/* Animaciones */
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-items {
+  animation: fadeDown 0.5s ease;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .navbar-container {
+    height: 70px;
+  }
+  
+  .logo img {
+    height: 55px;
+  }
+}

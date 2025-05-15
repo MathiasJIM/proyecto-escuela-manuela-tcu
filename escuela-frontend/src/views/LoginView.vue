@@ -82,8 +82,7 @@
         </form>
         
         <div class="login-footer">
-          <p>¿Es padre de familia y no tiene una cuenta? <router-link to="/crear-cuenta" class="register-link">Registrarse</router-link></p>
-          <p class="mt-2">Si es docente y no tiene acceso, por favor contacte a la administración de la escuela</p>
+          <p>Si es padre de familia o docente y no tiene acceso, por favor contacte a la administración de la escuela</p>
         </div>
       </div>
       
