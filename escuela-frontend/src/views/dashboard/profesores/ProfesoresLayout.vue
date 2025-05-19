@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import DashboardSidebar from '@/components/layout/SidebarProfesores.vue';
+import DashboardSidebar from '@/components/layout/SidebarProfesores.vue'
 </script>
 
 <style scoped>

@@ -10,7 +10,6 @@ import re
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 load_dotenv()
 
 class EmailConfig:
@@ -23,8 +22,9 @@ class EmailConfig:
     FROM_NAME: str = os.getenv("FROM_NAME", "Escuela Manuela Santamaría")
     WEBSITE_URL: str = os.getenv("WEBSITE_URL", "http://localhost:5173")
     
-
     DEV_MODE: bool = os.getenv("DEV_MODE", "True").lower() in ["true", "1", "t", "y", "yes"]
+
+
 
 async def send_email(to_email: str,subject: str,html_content: str,
 cc: Optional[List[str]] = None,bcc: Optional[List[str]] = None) -> bool:
@@ -164,6 +164,119 @@ async def send_welcome_email(to_email: str, nombre: str, password: str) -> bool:
                 <a href="{EmailConfig.WEBSITE_URL}" class="button">Acceder al Portal</a>
                 
                 <p>Si tienes alguna pregunta, no dudes en contactar a la administración de la escuela.</p>
+            </div>
+            <div class="footer">
+                <p>Este es un correo automático, por favor no responder.</p>
+                <p>© {2025} Escuela Manuela Santamaría. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    return await send_email(to_email, subject, html_content)
+
+
+async def send_recovery_password_email(to_email: str, nombre: str, password: str) -> bool:
+    """
+    Envía un correo electrónico con la nueva contraseña generada para recuperación.
+    
+    Args:
+        to_email: Correo electrónico del destinatario
+        nombre: Nombre del usuario
+        password: Nueva contraseña generada
+        
+    Returns:
+        True si el correo se envió correctamente, False en caso contrario
+    """
+    print("\n" + "!" * 80)
+    print(f"RECUPERACIÓN DE CONTRASEÑA PARA {nombre.upper()} ({to_email})")
+    print("!" * 80)
+    print(f"Nueva contraseña: {password}")
+    print("IMPORTANTE: Se recomienda cambiar esta contraseña en el primer inicio de sesión.")
+    print("!" * 80 + "\n")
+    
+    subject = "Recuperación de contraseña - Escuela Manuela Santamaría"
+    
+    html_content = f"""
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }}
+            .header {{
+                background-color: #1e2a38;
+                color: white;
+                padding: 10px 20px;
+                text-align: center;
+                border-radius: 5px 5px 0 0;
+            }}
+            .content {{
+                padding: 20px;
+            }}
+            .credentials {{
+                background-color: #f9f9f9;
+                padding: 15px;
+                border-radius: 5px;
+                margin: 20px 0;
+                border-left: 4px solid #e74c3c;
+            }}
+            .button {{
+                display: inline-block;
+                background-color: #1e2a38;
+                color: white;
+                padding: 10px 20px;
+                text-decoration: none;
+                border-radius: 5px;
+                margin-top: 20px;
+            }}
+            .footer {{
+                margin-top: 30px;
+                text-align: center;
+                font-size: 0.8em;
+                color: #666;
+            }}
+            .alert {{
+                color: #e74c3c;
+                font-weight: bold;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Escuela Manuela Santamaría</h1>
+            </div>
+            <div class="content">
+                <h2>Recuperación de contraseña</h2>
+                <p>Hola {nombre},</p>
+                
+                <p>Has solicitado recuperar tu contraseña para acceder al sistema de la Escuela Manuela Santamaría. A continuación, encontrarás tu nueva contraseña temporal:</p>
+                
+                <div class="credentials">
+                    <p><strong>Correo electrónico:</strong> {to_email}</p>
+                    <p><strong>Nueva contraseña:</strong> {password}</p>
+                </div>
+                
+                <p class="alert">IMPORTANTE: Por motivos de seguridad, te recomendamos cambiar esta contraseña en cuanto inicies sesión.</p>
+                
+                <p>Para acceder al sistema, haz clic en el siguiente enlace:</p>
+                <a href="{EmailConfig.WEBSITE_URL}" class="button">Iniciar sesión</a>
+                
+                <p>Si no has solicitado recuperar tu contraseña, por favor contacta inmediatamente a la administración de la escuela.</p>
+                
+                <p>Saludos cordiales,<br>
+                Escuela Manuela Santamaría</p>
             </div>
             <div class="footer">
                 <p>Este es un correo automático, por favor no responder.</p>

@@ -8,7 +8,17 @@
           <p class="login-subtitle">Ingrese sus credenciales para acceder al sistema</p>
         </div>
         
-        <form @submit.prevent="handleLogin" class="login-form">
+        <!-- Mensaje de error general -->
+        <div v-if="errorMessage" class="login-error-message">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+        
+        <form @submit="handleLogin" class="login-form">
           <div class="form-group">
             <label for="email">Correo Electrónico</label>
             <div class="input-container">
@@ -108,6 +118,7 @@ const {
   showPassword,
   isLoading,
   errors,
+  errorMessage,
   togglePassword,
   handleLogin
 } = useLogin()

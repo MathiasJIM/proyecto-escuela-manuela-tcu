@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LandingPage from '@/views/LandingPage.vue'
+import AuthService from '@/services/auth.service'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,15 @@ const router = createRouter({
     {
       path: '/dashboard',
       component: () => import('@/views/dashboard/profesores/ProfesoresLayout.vue'),
+      meta: { requiresAuth: true, role: 'profesor' },
+      beforeEnter: (to, from, next) => {
+        const currentUser = AuthService.getCurrentUser();
+        if (!currentUser || currentUser.rol !== 'profesor') {
+          next({ name: 'login' });
+        } else {
+          next();
+        }
+      },
       children: [
         {
           path: 'profesores/inicio',
@@ -85,6 +95,15 @@ const router = createRouter({
     {
       path: '/dashboard/direccion',
       component: () => import('@/views/dashboard/direccion/DireccionLayout.vue'),
+      meta: { requiresAuth: true, role: 'direccion' },
+      beforeEnter: (to, from, next) => {
+        const currentUser = AuthService.getCurrentUser();
+        if (!currentUser || currentUser.rol !== 'direccion') {
+          next({ name: 'login' });
+        } else {
+          next();
+        }
+      },
       children: [
         {
           path: 'inicio',
@@ -184,5 +203,20 @@ const router = createRouter({
     },
   ],
 })
+
+// Guardia de navegación global para proteger rutas
+router.beforeEach((to, from, next) => {
+  // Verificar si la ruta requiere autenticación
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const isAuthenticated = AuthService.isAuthenticated();
+  
+  if (requiresAuth && !isAuthenticated) {
+    // Si la ruta requiere autenticación y el usuario no está autenticado, redirigir al login
+    next({ name: 'login' });
+  } else {
+    // En otros casos, permitir la navegación
+    next();
+  }
+});
 
 export default router

@@ -303,7 +303,7 @@
     <div class="sidebar-footer">
       <div class="user-info">
         <div class="user-avatar">
-          <font-awesome-icon icon="fa-user" />
+          <font-awesome-icon icon="fa-user-circle" />
         </div>
         <div class="user-details">
           <p class="user-name">{{ nombreUsuario }}</p>
@@ -326,13 +326,15 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 import { useNotificacionesStore } from '@/stores/notificacionesStore';
 
 const route = useRoute();
 const router = useRouter();
+const authStore = useAuthStore();
 const notificacionesStore = useNotificacionesStore();
 
-const nombreUsuario = ref('Nombre Director/a');
+const nombreUsuario = computed(() => authStore.userName);
 
 const submenuStates = ref({
   usuarios: false,
@@ -361,9 +363,9 @@ const toggleSubmenu = (submenu: string) => {
     !submenuStates.value[submenu as keyof typeof submenuStates.value];
 };
 
-const cerrarSesion = () => {
-
-  router.push('/login');
+const cerrarSesion = async () => {
+  await authStore.logout();
+  router.replace({ name: 'login' });
 };
 </script>
 

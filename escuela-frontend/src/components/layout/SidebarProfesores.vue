@@ -29,11 +29,11 @@
           <font-awesome-icon icon="fa-user" />
         </div>
         <div class="user-details">
-          <p class="user-name">Nombre Docente</p>
+          <p class="user-name">{{ userName }}</p>
           <p class="user-role">Profesor</p>
         </div>
       </div>
-      <button class="logout-button">
+      <button class="logout-button" @click="cerrarSesion">
         <font-awesome-icon icon="fa-sign-out-alt" />
         <span>Cerrar Sesión</span>
       </button>
@@ -42,16 +42,20 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { computed } from 'vue';
 import { useNotificacionesStore } from '@/stores/notificacionesStore';
+import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
+const router = useRouter();
 const notificacionesStore = useNotificacionesStore();
-// Usamos computed para que se actualice reactivamente
+const authStore = useAuthStore();
+
 const cantidadNoLeidas = computed(() => notificacionesStore.cantidadNoLeidas);
 
-// Elementos del menú
+const userName = computed(() => authStore.userName);
+
 const menuItems = [
   { name: 'Inicio', path: '/dashboard/profesores/inicio', icon: 'fa-home' },
   { name: 'Asistencia', path: '/dashboard/profesores/asistencia', icon: 'fa-clipboard-check' },
@@ -62,9 +66,13 @@ const menuItems = [
   { name: 'Perfil', path: '/dashboard/profesores/perfil', icon: 'fa-user' },
 ];
 
-// Función para verificar si un elemento del menú está activo
 const isActive = (path: string) => {
   return route.path === path || route.path.startsWith(`${path}/`);
+};
+
+const cerrarSesion = async () => {
+  await authStore.logout();
+  router.replace({ name: 'login' });
 };
 </script>
 

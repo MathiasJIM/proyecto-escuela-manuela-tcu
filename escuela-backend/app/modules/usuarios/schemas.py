@@ -8,15 +8,18 @@ class UsuarioBase(BaseModel):
     activo: bool
     foto: Optional[str] = None
 
+
 class UsuarioOut(UsuarioBase):
     id_usuario: UUID4
 
     class Config:
         orm_mode = True
 
+
 class UsuarioLogin(BaseModel):
     correo: EmailStr
     contrasena: str
+
 
 class UsuarioCreate(BaseModel):
     correo: EmailStr
@@ -26,9 +29,11 @@ class UsuarioCreate(BaseModel):
     activo: bool = True
     foto: Optional[str] = None
 
+
 class RegistroResponse(BaseModel):
     usuario: UsuarioOut
     contrasena_generada: Optional[str] = None
+
 
 class CambioContrasenaRequest(BaseModel):
     contrasena_actual: str
@@ -41,6 +46,7 @@ class CambioContrasenaRequest(BaseModel):
         if len(v) < 8:
             raise ValueError('La contraseña debe tener al menos 8 caracteres')
         return v
+
 
 class CambioContrasenaResponse(BaseModel):
     mensaje: str
