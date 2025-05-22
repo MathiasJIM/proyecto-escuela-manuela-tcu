@@ -113,7 +113,7 @@ const router = createRouter({
         {
           path: 'usuarios/profesores',
           name: 'direccion-profesores',
-          component: () => import('@/views/dashboard/direccion/GestiónProfesoresView.vue'),
+          component: () => import('@/views/dashboard/direccion/GestionProfesoresView.vue'),
         },
         {
           path: 'usuarios/estudiantes',
@@ -130,11 +130,7 @@ const router = createRouter({
           name: 'direccion-anios-ver',
           component: () => import('@/views/dashboard/direccion/VerAniosView.vue'),
         },
-        {
-          path: 'anios/crear',
-          name: 'direccion-anios-crear',
-          component: () => import('@/views/dashboard/direccion/CrearAnioView.vue'),
-        },
+
         {
           path: 'anios/promocionar',
           name: 'direccion-anios-promocionar',

@@ -133,7 +133,7 @@
 
 .table th {
   padding: 12px 24px;
-  text-align: left;
+  text-align: center;
   font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
@@ -145,6 +145,7 @@
 .table td {
   padding: 16px 24px;
   white-space: nowrap;
+  text-align: center;
 }
 
 .table tbody tr {
@@ -157,6 +158,9 @@
 
 .cell-content {
   font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .cell-content.email {
@@ -173,6 +177,7 @@
 .action-buttons {
   display: flex;
   gap: 8px;
+  justify-content: center;
 }
 
 .btn-action {
@@ -546,4 +551,74 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* Estilos específicos para corregir el ancho */
+.search-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 20px auto;
+}
+
+.table-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Corregir posición del botón de agregar */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 20px auto;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Estilos para la sección de contraseña generada */
+.password-container {
+  padding: 20px;
+  text-align: center;
+}
+
+.password-box {
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin: 20px 0;
+}
+
+.password {
+  font-size: 18px;
+  font-weight: bold;
+  color: #28a745;
+  margin: 10px 0;
+  letter-spacing: 1px;
+}
+
+.warning {
+  color: #dc3545;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

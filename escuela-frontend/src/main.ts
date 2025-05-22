@@ -43,7 +43,9 @@ import {
   faArrowUp,
   faEye as faSolidEye,
   faCog,
-  faDownload
+  faDownload,
+  faPen,
+  faTrash
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -103,6 +105,8 @@ library.add(
   faArrowUp,
   faSolidEye,
   faCog,
+  faPen,
+  faTrash,
   faFacebookSquare,
   faFacebook,
   farEnvelope,

@@ -110,18 +110,7 @@
                 <span class="submenu-text">Ver Años</span>
               </router-link>
             </li>
-            <li class="submenu-item">
-              <router-link 
-                to="/dashboard/direccion/anios/crear" 
-                class="submenu-link"
-                :class="{ 'active': isActive('/dashboard/direccion/anios/crear') }"
-              >
-                <span class="submenu-icon">
-                  <font-awesome-icon icon="fa-plus" />
-                </span>
-                <span class="submenu-text">Crear Año</span>
-              </router-link>
-            </li>
+
             <li class="submenu-item">
               <router-link 
                 to="/dashboard/direccion/anios/promocionar" 

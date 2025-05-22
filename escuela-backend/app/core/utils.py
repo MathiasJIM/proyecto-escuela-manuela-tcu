@@ -1,6 +1,7 @@
 import random
 import string
 import re
+import unicodedata
 from typing import Optional
 
 
@@ -50,3 +51,43 @@ def validar_fortaleza_contrasena(contrasena: str) -> bool:
         return False
     
     return True
+
+
+def generar_correo_padre(nombre_estudiante: str, db) -> str:
+    from app.modules.usuarios.models import Usuario
+    
+    nombre_normalizado = ''.join(
+        c for c in unicodedata.normalize('NFD', nombre_estudiante.lower())
+        if not unicodedata.combining(c)
+    )
+    
+    nombre_normalizado = re.sub(r'[^a-z0-9]', ' ', nombre_normalizado)
+    
+    partes = nombre_normalizado.split()
+    
+    if len(partes) >= 2:
+        base_usuario = f"{partes[0][0]}{partes[1]}"
+    else:
+        base_usuario = f"{partes[0][0]}{partes[0]}"
+    
+    secuencia_random = str(random.randint(1000, 9999))
+    
+    usuario_base = f"{base_usuario}{secuencia_random}"
+    
+    usuario = f"{usuario_base}@escmanuela.ed.cr"
+    
+    intentos = 0
+    usuario_original = usuario_base
+    
+    while db.query(Usuario).filter(Usuario.correo == usuario).first():
+        intentos += 1
+        secuencia_random = str(random.randint(1000, 9999))
+        usuario = f"{usuario_original}{secuencia_random}@escmanuela.ed.cr"
+        
+        if intentos > 10:
+            import time
+            timestamp = int(time.time()) % 10000
+            usuario = f"{usuario_original}{timestamp}@escmanuela.ed.cr"
+            break
+    
+    return usuario

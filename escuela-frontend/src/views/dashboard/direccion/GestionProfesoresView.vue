@@ -3,10 +3,7 @@
     <!-- Header section with title and add button -->
     <div class="header">
       <h1 class="title">Gestión de Profesores</h1>
-      <button 
-        @click="openModal(null)" 
-        class="btn btn-primary add-button"
-      >
+      <button @click="openModal(null)" class="btn btn-primary add-button">
         <font-awesome-icon :icon="['fas', 'plus']" />
         Agregar Profesor
       </button>
@@ -16,17 +13,13 @@
     <div class="search-container">
       <div class="search-bar">
         <font-awesome-icon :icon="['fas', 'search']" class="search-icon" />
-        <input 
-          type="text" 
-          v-model="searchTerm" 
-          placeholder="Buscar profesor por nombre o correo..." 
+        <input
+          type="text"
+          v-model="searchTerm"
+          placeholder="Buscar profesor por nombre o correo..."
           class="search-input"
         />
-        <button 
-          v-if="searchTerm" 
-          @click="searchTerm = ''" 
-          class="search-clear-btn"
-        >
+        <button v-if="searchTerm" @click="searchTerm = ''" class="search-clear-btn">
           <font-awesome-icon :icon="['fas', 'times']" />
         </button>
       </div>
@@ -46,7 +39,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="profesor in filteredProfesores" :key="profesor.id" class="table-row">
+            <tr
+              v-for="profesor in filteredProfesores"
+              :key="profesor.id_profesor"
+              class="table-row"
+            >
               <td>
                 <div class="cell-content">{{ profesor.nombreCompleto }}</div>
               </td>
@@ -65,22 +62,18 @@
               </td>
               <td>
                 <div class="action-buttons">
-                  <button 
-                    @click="verProfesor(profesor)" 
+                  <button
+                    @click="verDetalles(profesor)"
                     class="btn-action btn-view"
                     title="Ver detalles"
                   >
                     <font-awesome-icon :icon="['fas', 'eye']" />
                   </button>
-                  <button 
-                    @click="openModal(profesor)" 
-                    class="btn-action btn-edit"
-                    title="Editar"
-                  >
+                  <button @click="openModal(profesor)" class="btn-action btn-edit" title="Editar">
                     <font-awesome-icon :icon="['fas', 'pen']" />
                   </button>
-                  <button 
-                    @click="confirmarEliminar(profesor)" 
+                  <button
+                    @click="confirmarEliminar(profesor)"
                     class="btn-action btn-delete"
                     title="Eliminar"
                   >
@@ -92,7 +85,11 @@
             <!-- Empty state -->
             <tr v-if="filteredProfesores.length === 0">
               <td colspan="5" class="empty-state">
-                {{ profesores.length === 0 ? 'No hay profesores registrados. Haga clic en "Agregar Profesor" para comenzar.' : 'No se encontraron profesores que coincidan con la búsqueda.' }}
+                {{
+                  profesores.length === 0
+                    ? 'No hay profesores registrados. Haga clic en "Agregar Profesor" para comenzar.'
+                    : 'No se encontraron profesores que coincidan con la búsqueda.'
+                }}
               </td>
             </tr>
           </tbody>
@@ -117,10 +114,10 @@
             <!-- Nombre completo -->
             <div class="form-group">
               <label for="nombreCompleto">Nombre Completo</label>
-              <input 
-                type="text" 
-                id="nombreCompleto" 
-                v-model="formData.nombreCompleto" 
+              <input
+                type="text"
+                id="nombreCompleto"
+                v-model="formData.nombreCompleto"
                 class="form-control"
                 required
               />
@@ -129,10 +126,10 @@
             <!-- Correo electrónico -->
             <div class="form-group">
               <label for="email">Correo Electrónico</label>
-              <input 
-                type="email" 
-                id="email" 
-                v-model="formData.email" 
+              <input
+                type="email"
+                id="email"
+                v-model="formData.email"
                 class="form-control"
                 required
               />
@@ -143,19 +140,19 @@
               <label for="materias">Materias</label>
               <div class="select-container">
                 <div class="select-with-button">
-                  <select 
-                    id="materias" 
-                    v-model="selectedMateria" 
-                    class="form-control"
-                  >
+                  <select id="materias" v-model="selectedMateria" class="form-control">
                     <option value="" disabled selected>Seleccionar materia</option>
-                    <option v-for="materia in materiasDisponibles" :key="materia.id" :value="materia">
+                    <option
+                      v-for="materia in materiasDisponibles"
+                      :key="materia.id_materia"
+                      :value="materia"
+                    >
                       {{ materia.nombre }}
                     </option>
                   </select>
-                  <button 
-                    type="button" 
-                    @click="agregarMateria" 
+                  <button
+                    type="button"
+                    @click="agregarMateria"
                     class="btn-add"
                     :disabled="!selectedMateria"
                   >
@@ -165,17 +162,13 @@
               </div>
               <!-- Chips de materias seleccionadas -->
               <div class="chips-container">
-                <div 
-                  v-for="(materia, index) in formData.materias" 
+                <div
+                  v-for="(materia, index) in formData.materias"
                   :key="index"
                   class="chip chip-blue"
                 >
                   {{ materia.nombre }}
-                  <button 
-                    type="button" 
-                    @click="eliminarMateria(index)" 
-                    class="chip-delete-btn"
-                  >
+                  <button type="button" @click="eliminarMateria(index)" class="chip-delete-btn">
                     <font-awesome-icon :icon="['fas', 'xmark']" />
                   </button>
                 </div>
@@ -187,19 +180,19 @@
               <label for="secciones">Secciones</label>
               <div class="select-container">
                 <div class="select-with-button">
-                  <select 
-                    id="secciones" 
-                    v-model="selectedSeccion" 
-                    class="form-control"
-                  >
+                  <select id="secciones" v-model="selectedSeccion" class="form-control">
                     <option value="" disabled selected>Seleccionar sección</option>
-                    <option v-for="seccion in seccionesDisponibles" :key="seccion.id" :value="seccion">
+                    <option
+                      v-for="seccion in seccionesDisponibles"
+                      :key="seccion.id_seccion"
+                      :value="seccion"
+                    >
                       {{ seccion.nombre }}
                     </option>
                   </select>
-                  <button 
-                    type="button" 
-                    @click="agregarSeccion" 
+                  <button
+                    type="button"
+                    @click="agregarSeccion"
                     class="btn-add"
                     :disabled="!selectedSeccion"
                   >
@@ -209,17 +202,13 @@
               </div>
               <!-- Chips de secciones seleccionadas -->
               <div class="chips-container">
-                <div 
-                  v-for="(seccion, index) in formData.secciones" 
+                <div
+                  v-for="(seccion, index) in formData.secciones"
                   :key="index"
                   class="chip chip-green"
                 >
                   {{ seccion.nombre }}
-                  <button 
-                    type="button" 
-                    @click="eliminarSeccion(index)" 
-                    class="chip-delete-btn"
-                  >
+                  <button type="button" @click="eliminarSeccion(index)" class="chip-delete-btn">
                     <font-awesome-icon :icon="['fas', 'xmark']" />
                   </button>
                 </div>
@@ -228,22 +217,15 @@
 
             <!-- Botones de acción -->
             <div class="form-actions">
-              <button 
-                type="button" 
-                @click="closeModal" 
-                class="btn btn-secondary"
-              >
-                Cancelar
-              </button>
-              <button 
-                type="submit" 
-                class="btn btn-primary"
-              >
-                <font-awesome-icon :icon="['fas', 'save']" />
-                Guardar
+              <button type="button" @click="closeModal" class="btn btn-secondary">Cancelar</button>
+              <button type="submit" class="btn btn-primary" :disabled="cargando">
+                {{ isEditing ? 'Actualizar' : 'Guardar' }}
+                <span v-if="cargando" class="spinner"></span>
               </button>
             </div>
           </form>
+
+          <!-- Las notificaciones ahora se muestran dinámicamente con JavaScript -->
         </div>
       </div>
     </Teleport>
@@ -256,22 +238,13 @@
             <font-awesome-icon :icon="['fas', 'exclamation-triangle']" class="warning-icon" />
             <h3 class="confirm-title">Confirmar Eliminación</h3>
             <p class="confirm-message">
-              ¿Está seguro que desea eliminar al profesor <span class="text-bold">{{ profesorAEliminar?.nombreCompleto }}</span>?
-              Esta acción no se puede deshacer.
+              ¿Está seguro que desea eliminar al profesor
+              <span class="text-bold">{{ profesorAEliminar?.nombreCompleto }}</span
+              >? Esta acción no se puede deshacer.
             </p>
             <div class="confirm-actions">
-              <button 
-                @click="showConfirmDialog = false" 
-                class="btn btn-secondary"
-              >
-                Cancelar
-              </button>
-              <button 
-                @click="eliminarProfesor" 
-                class="btn btn-danger"
-              >
-                Eliminar
-              </button>
+              <button @click="showConfirmDialog = false" class="btn btn-secondary">Cancelar</button>
+              <button @click="eliminarProfesor" class="btn btn-danger">Eliminar</button>
             </div>
           </div>
         </div>
@@ -288,7 +261,7 @@
               <font-awesome-icon :icon="['fas', 'xmark']" />
             </button>
           </div>
-          
+
           <div class="details-content" v-if="selectedProfesor">
             <div class="details-section">
               <div class="details-avatar">
@@ -312,12 +285,13 @@
                 <div v-if="selectedProfesor.materias.length === 0" class="empty-message">
                   No tiene materias asignadas
                 </div>
-                <div 
-                  v-for="materia in selectedProfesor.materias" 
-                  :key="materia.id"
-                  class="details-chip"
+                <div
+                  v-for="materia in selectedProfesor.materias"
+                  :key="materia.id_materia"
+                  class="detail-item"
                 >
-                  {{ materia.nombre }}
+                  <font-awesome-icon :icon="['fas', 'book']" class="detail-icon" />
+                  <span>{{ materia.nombre }}</span>
                 </div>
               </div>
             </div>
@@ -331,21 +305,19 @@
                 <div v-if="selectedProfesor.secciones.length === 0" class="empty-message">
                   No tiene secciones asignadas
                 </div>
-                <div 
-                  v-for="seccion in selectedProfesor.secciones" 
-                  :key="seccion.id"
-                  class="details-chip"
+                <div
+                  v-for="seccion in selectedProfesor.secciones"
+                  :key="seccion.id_seccion"
+                  class="detail-item"
                 >
-                  {{ seccion.nombre }}
+                  <font-awesome-icon :icon="['fas', 'users']" class="detail-icon" />
+                  <span>{{ seccion.nombre }}</span>
                 </div>
               </div>
             </div>
 
             <div class="details-actions">
-              <button 
-                @click="editarDesdeDetalles()" 
-                class="btn btn-primary details-btn"
-              >
+              <button @click="editarDesdeDetalles()" class="btn btn-primary details-btn">
                 <font-awesome-icon :icon="['fas', 'pen']" />
                 Editar Profesor
               </button>
@@ -359,31 +331,6 @@
 
 <style scoped>
 @import '@/assets/styles/dashboards/direccion/gestionprofes.css';
-
-/* Estilos específicos para corregir el ancho */
-.search-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto 20px auto;
-}
-
-.table-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Corregir posición del botón de agregar */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto 20px auto;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #e0e0e0;
-}
 </style>
 
 <script setup lang="ts">
@@ -406,7 +353,9 @@ const {
   selectedMateria,
   selectedSeccion,
   filteredProfesores,
-  
+  cargando,
+  error,
+
   // Métodos
   formatMaterias,
   formatSecciones,
@@ -417,10 +366,12 @@ const {
   agregarSeccion,
   eliminarSeccion,
   guardarProfesor,
-  verProfesor,
+  verDetalles,
   closeDetailsModal,
   editarDesdeDetalles,
   confirmarEliminar,
-  eliminarProfesor
+  eliminarProfesor,
+  closeConfirmDialog,
+  cargarDatos,
 } = useGestionProfes()
 </script>

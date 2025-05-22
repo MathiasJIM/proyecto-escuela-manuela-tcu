@@ -4,7 +4,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- Tabla: anio_lectivo
 CREATE TABLE anio_lectivo (
     id_anio UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    nombre VARCHAR(9) UNIQUE NOT NULL, -- Ejemplo: "2025"
+    nombre VARCHAR(9) UNIQUE NOT NULL, 
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT FALSE
