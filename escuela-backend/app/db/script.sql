@@ -69,12 +69,16 @@ CREATE TABLE profesor_seccion (
     PRIMARY KEY (id_profesor, id_seccion)
 );
 
--- Tabla: estudiante
 CREATE TABLE estudiante (
     id_estudiante UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    nombre VARCHAR(100) NOT NULL,
-    id_padre UUID REFERENCES usuario(id_usuario) ON DELETE SET NULL
+    cedula VARCHAR(20) NOT NULL UNIQUE,
+    nombre VARCHAR(50) NOT NULL,
+    primer_apellido VARCHAR(50) NOT NULL,
+    segundo_apellido VARCHAR(50) NOT NULL,
+    id_padre UUID REFERENCES usuario(id_usuario) ON DELETE SET NULL,
+    id_seccion UUID REFERENCES seccion(id_seccion) ON DELETE SET NULL
 );
+
 
 -- Tabla: matricula
 CREATE TABLE matricula (
@@ -191,4 +195,24 @@ CREATE TABLE nota (
     descripcion TEXT,
     calificacion DECIMAL(5,2) CHECK (calificacion >= 0 AND calificacion <= 100),
     fecha DATE NOT NULL
+);
+
+-- Tabla: documento
+CREATE TABLE documento (
+    id_documento UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    titulo VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    tipo VARCHAR(30) CHECK (tipo IN ('planeamiento', 'circular', 'material', 'informe', 'otro')) NOT NULL,
+    archivo TEXT NOT NULL,
+    fecha_subida TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    subido_por UUID REFERENCES usuario(id_usuario) ON DELETE SET NULL,
+    destinatario VARCHAR(20) CHECK (destinatario IN ('direccion', 'profesores', 'padres', 'todos')) DEFAULT 'todos'
+);
+
+CREATE TABLE noticia (
+    id_noticia UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    titulo VARCHAR(100) NOT NULL,
+    contenido TEXT NOT NULL,
+    fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    publicada_por UUID REFERENCES usuario(id_usuario) ON DELETE SET NULL
 );

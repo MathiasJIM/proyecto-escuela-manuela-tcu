@@ -21,6 +21,7 @@ import {
 import EstudiantesService from '@/services/estudiantes.service'
 import type {
   Estudiante as EstudianteAPI,
+  EstudianteCreate,
   EstudianteWithCredentials,
 } from '@/services/estudiantes.service'
 import SeccionesService from '@/services/secciones.service'
@@ -48,31 +49,46 @@ library.add(
   faCalendarAlt,
 )
 
-// Definición de interfaces
-export interface Estudiante {
-  id_estudiante: string
-  nombre: string
-  id_padre: string | null
-  seccion?: {
-    id_seccion: string
-    nombre: string
-    grado: string
-  }
-  credenciales?: {
-    correo: string
-    contrasena: string
-  }
-}
+// Re-exportar interfaces del servicio
+export type { Estudiante, EstudianteCreate, EstudianteUpdate, EstudianteWithCredentials } from '@/services/estudiantes.service'
 
 // Interfaz para el formulario
 export interface FormData {
   id_estudiante: string
+  cedula: string
   nombre: string
-  id_seccion?: string
-  id_anio?: string
+  primer_apellido: string
+  segundo_apellido: string
+  id_seccion: string | null
 }
 
 export default function useGestionEstudiantes() {
+  // Estado
+  const estudiantes = ref<EstudianteAPI[]>([])
+  const formData = ref<FormData>({
+    id_estudiante: '',
+    cedula: '',
+    nombre: '',
+    primer_apellido: '',
+    segundo_apellido: '',
+    id_seccion: null
+  })
+  const showModal = ref(false)
+  const isEditing = ref(false)
+  const showConfirmDialog = ref(false)
+  const estudianteAEliminar = ref<EstudianteAPI | null>(null)
+  const showDetailsModal = ref(false)
+  const selectedEstudiante = ref<EstudianteAPI | null>(null)
+  const searchTerm = ref('')
+  const showImportModal = ref(false)
+  const cargando = ref(false)
+  const error = ref('')
+  const showCredencialesModal = ref(false)
+  const credencialesPadre = ref<{ correo: string; contrasena: string } | null>(null)
+  const secciones = ref<Seccion[]>([])
+  const anioActivo = ref<AnioLectivo | null>(null)
+  const cargandoSecciones = ref(false)
+
   // Función para mostrar notificaciones
   const showNotification = (message: string, type: 'success' | 'error' = 'success') => {
     // Crear un elemento de notificación
@@ -81,7 +97,9 @@ export default function useGestionEstudiantes() {
     notification.innerHTML = `
       <div class="notification-content">
         <span>${message}</span>
-        <button class="notification-close">&times;</button>
+        <button class="close-button" onclick="this.parentElement.parentElement.remove()">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
     `
     
@@ -93,22 +111,22 @@ export default function useGestionEstudiantes() {
     notification.style.color = 'white'
     notification.style.padding = '15px'
     notification.style.borderRadius = '4px'
-    notification.style.zIndex = '1000'
+    notification.style.zIndex = '9999'
     notification.style.minWidth = '300px'
-    notification.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)'
+    notification.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)'
     
-    // Agregar al DOM
+    // Agregar la notificación al DOM
     document.body.appendChild(notification)
     
-    // Botón para cerrar
-    const closeBtn = notification.querySelector('.notification-close')
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
+    // Agregar evento para cerrar la notificación
+    const closeButton = notification.querySelector('.notification-close')
+    if (closeButton) {
+      closeButton.addEventListener('click', () => {
         document.body.removeChild(notification)
       })
     }
     
-    // Eliminar después de 5 segundos
+    // Remover la notificación después de 5 segundos
     setTimeout(() => {
       if (document.body.contains(notification)) {
         document.body.removeChild(notification)
@@ -116,49 +134,14 @@ export default function useGestionEstudiantes() {
     }, 5000)
   }
 
-  // Estado para la lista de estudiantes
-  const estudiantes = ref<Estudiante[]>([])
-  const cargando = ref(false)
-  const error = ref('')
-
-  // Estado para las secciones y años lectivos
-  const secciones = ref<Seccion[]>([])
-  const anioActivo = ref<AnioLectivo | null>(null)
-  const cargandoSecciones = ref(false)
-
-  // Datos para el formulario
-  const formData = ref<FormData>({
-    id_estudiante: '',
-    nombre: '',
-    id_seccion: undefined,
-    id_anio: undefined,
-  })
-
-  // Estado para los modales
-  const showModal = ref(false)
-  const isEditing = ref(false)
-  const showImportModal = ref(false)
-  const showCredencialesModal = ref(false)
-  const credencialesPadre = ref<{ correo: string; contrasena: string } | null>(null)
-
-  // Estado para el diálogo de confirmación
-  const showConfirmDialog = ref(false)
-  const estudianteAEliminar = ref<Estudiante | null>(null)
-
-  // Estado para el modal de detalles
-  const showDetailsModal = ref(false)
-  const selectedEstudiante = ref<Estudiante | null>(null)
-
-  // Estado para la búsqueda
-  const searchTerm = ref('')
-
-  // Estudiantes filtrados según el término de búsqueda
+  // Estudiantes filtrados por término de búsqueda
   const filteredEstudiantes = computed(() => {
     if (!searchTerm.value) return estudiantes.value
 
     const term = searchTerm.value.toLowerCase()
-    return estudiantes.value.filter((estudiante) => {
-      return estudiante.nombre.toLowerCase().includes(term)
+    return estudiantes.value.filter((estudiante: EstudianteAPI) => {
+      const nombreCompleto = `${estudiante.nombre} ${estudiante.primer_apellido} ${estudiante.segundo_apellido}`.toLowerCase()
+      return nombreCompleto.includes(term) || estudiante.cedula.toLowerCase().includes(term)
     })
   })
 
@@ -169,12 +152,7 @@ export default function useGestionEstudiantes() {
 
     try {
       const data = await EstudiantesService.obtenerEstudiantes()
-      estudiantes.value = data.map((est) => ({
-        id_estudiante: est.id_estudiante,
-        nombre: est.nombre,
-        id_padre: est.id_padre,
-        seccion: est.seccion,
-      }))
+      estudiantes.value = data
     } catch (err: any) {
       console.error('Error al cargar estudiantes:', err)
       error.value = 'No se pudieron cargar los estudiantes. Intente nuevamente.'
@@ -184,13 +162,6 @@ export default function useGestionEstudiantes() {
     }
   }
 
-  // Cargar datos iniciales
-  onMounted(() => {
-    cargarEstudiantes()
-    cargarSecciones()
-    cargarAnioActivo()
-  })
-
   // Cargar secciones disponibles
   const cargarSecciones = async () => {
     cargandoSecciones.value = true
@@ -199,14 +170,12 @@ export default function useGestionEstudiantes() {
       console.log('Secciones cargadas:', secciones.value)
     } catch (err: any) {
       console.error('Error al cargar secciones:', err)
-      // Solo mostrar notificación si es un error de autorización o de servidor
       if (err.response && (err.response.status === 401 || err.response.status >= 500)) {
         showNotification(
           'No se pudieron cargar las secciones. Verifique su conexión e intente nuevamente.',
           'error',
         )
       } else if (!err.response) {
-        // Error de red o servidor no disponible
         showNotification('No se pudo conectar con el servidor. Verifique su conexión.', 'error')
       }
     } finally {
@@ -222,28 +191,31 @@ export default function useGestionEstudiantes() {
     } catch (err: any) {
       console.error('Error al cargar año lectivo activo:', err)
       // Solo registrar el error, no mostrar notificación para no saturar al usuario
-      // Si no hay año lectivo activo, simplemente no se preseleccionará ninguno
     }
   }
 
   // Abrir el modal para crear o editar un estudiante
-  const openModal = (estudiante: Estudiante | null) => {
+  const openModal = (estudiante: EstudianteAPI | null) => {
     if (estudiante) {
       // Modo edición
       formData.value = {
         id_estudiante: estudiante.id_estudiante,
+        cedula: estudiante.cedula,
         nombre: estudiante.nombre,
-        id_seccion: estudiante.seccion?.id_seccion,
-        id_anio: anioActivo.value?.id_anio
+        primer_apellido: estudiante.primer_apellido,
+        segundo_apellido: estudiante.segundo_apellido,
+        id_seccion: estudiante.id_seccion
       }
       isEditing.value = true
     } else {
       // Modo creación
       formData.value = {
         id_estudiante: '',
+        cedula: '',
         nombre: '',
-        id_seccion: undefined,
-        id_anio: anioActivo.value?.id_anio
+        primer_apellido: '',
+        segundo_apellido: '',
+        id_seccion: null
       }
       isEditing.value = false
     }
@@ -253,138 +225,109 @@ export default function useGestionEstudiantes() {
   // Cerrar el modal
   const closeModal = () => {
     showModal.value = false
+    formData.value = {
+      id_estudiante: '',
+      cedula: '',
+      nombre: '',
+      primer_apellido: '',
+      segundo_apellido: '',
+      id_seccion: null
+    }
   }
 
   // Guardar un estudiante (crear o actualizar)
   const guardarEstudiante = async () => {
-    if (!formData.value.nombre) {
+    if (!formData.value.cedula || !formData.value.nombre || !formData.value.primer_apellido || !formData.value.segundo_apellido) {
       showNotification('Por favor complete todos los campos requeridos', 'error')
       return
     }
 
-    cargando.value = true
-    error.value = ''
-
     try {
       if (isEditing.value) {
-        // Actualizar estudiante existente
-        await EstudiantesService.actualizarEstudiante(formData.value.id_estudiante, {
+        // Modo edición
+        const estudianteActualizado = await EstudiantesService.actualizarEstudiante(formData.value.id_estudiante, {
+          cedula: formData.value.cedula,
           nombre: formData.value.nombre,
-          id_seccion: formData.value.id_seccion,
-          id_anio: formData.value.id_anio || anioActivo.value?.id_anio,
+          primer_apellido: formData.value.primer_apellido,
+          segundo_apellido: formData.value.segundo_apellido,
+          id_seccion: formData.value.id_seccion || undefined
         })
         
-        // Actualizar directamente el estudiante en el array en memoria
-        const index = estudiantes.value.findIndex(e => e.id_estudiante === formData.value.id_estudiante)
+        // Actualizar el estudiante en la lista
+        const index = estudiantes.value.findIndex(
+          (e) => e.id_estudiante === formData.value.id_estudiante
+        )
         if (index !== -1) {
-          // Obtener la sección si existe
-          const seccion = formData.value.id_seccion ? 
-            secciones.value.find(s => s.id_seccion === formData.value.id_seccion) : undefined
-          
-          // Actualizar el estudiante en el array
           estudiantes.value[index] = {
-            ...estudiantes.value[index],
-            nombre: formData.value.nombre,
-            seccion: seccion ? {
-              id_seccion: seccion.id_seccion,
-              nombre: seccion.nombre,
-              grado: seccion.grado
-            } : undefined
+            ...estudianteActualizado,
+            id_seccion: estudianteActualizado.id_seccion || null
           }
-          
-          // Crear un nuevo array para forzar la reactividad
-          estudiantes.value = [...estudiantes.value]
         }
         
-        showNotification('Estudiante actualizado correctamente', 'success')
-        closeModal()
+        showNotification('Estudiante actualizado exitosamente')
       } else {
-        // Crear nuevo estudiante
-        const datosEstudiante = {
+        // Modo creación
+        const nuevoEstudiante = await EstudiantesService.crearEstudiante({
+          cedula: formData.value.cedula,
           nombre: formData.value.nombre,
-          id_seccion: formData.value.id_seccion,
-          id_anio: formData.value.id_anio,
-        }
-
-        const response = await EstudiantesService.crearEstudiante(datosEstudiante)
-
-        // Mostrar credenciales del padre
-        credencialesPadre.value = {
-          correo: response.correo_padre,
-          contrasena: response.contrasena_padre,
-        }
-        showCredencialesModal.value = true
-
-        // Obtener la sección si existe
-        const seccion = formData.value.id_seccion ? 
-          secciones.value.find(s => s.id_seccion === formData.value.id_seccion) : undefined
-
-        // Agregar el nuevo estudiante al array en memoria
+          primer_apellido: formData.value.primer_apellido,
+          segundo_apellido: formData.value.segundo_apellido,
+          id_seccion: formData.value.id_seccion
+        } as EstudianteCreate)
+        
+        // Agregar el nuevo estudiante a la lista
         estudiantes.value.push({
-          id_estudiante: response.id_estudiante,
-          nombre: formData.value.nombre,
-          id_padre: response.id_padre,
-          seccion: seccion ? {
-            id_seccion: seccion.id_seccion,
-            nombre: seccion.nombre,
-            grado: seccion.grado
-          } : undefined
+          ...nuevoEstudiante,
+          id_seccion: nuevoEstudiante.id_seccion || null
         })
+        showNotification('Estudiante creado exitosamente')
         
-        // Crear un nuevo array para forzar la reactividad
-        estudiantes.value = [...estudiantes.value]
-
-        // Mostrar mensaje de éxito con información adicional sobre la matrícula
-        if (response.matriculado) {
-          showNotification('Estudiante creado y matriculado correctamente', 'success')
-        } else {
-          showNotification('Estudiante creado correctamente', 'success')
-        }
-        
-        closeModal()
+        // Mostrar las credenciales
+        showCredencialesModal.value = true
+        credencialesPadre.value = nuevoEstudiante.correo_padre && nuevoEstudiante.contrasena_padre ? {
+          correo: nuevoEstudiante.correo_padre,
+          contrasena: nuevoEstudiante.contrasena_padre
+        } : null
       }
+      
+      // Cerrar el modal
+      closeModal()
     } catch (err: any) {
       console.error('Error al guardar estudiante:', err)
-      error.value = 'No se pudo guardar el estudiante. Intente nuevamente.'
-      showNotification('No se pudo guardar el estudiante. Intente nuevamente.', 'error')
-    } finally {
-      cargando.value = false
+      showNotification(
+        err.response?.data?.message ||
+          'No se pudo guardar el estudiante. Intente nuevamente.',
+        'error'
+      )
     }
   }
 
-  // Cerrar el modal de credenciales
-  const closeCredencialesModal = () => {
-    showCredencialesModal.value = false
-    credencialesPadre.value = null
-  }
-
   // Ver detalles de un estudiante
-  const verEstudiante = (estudiante: Estudiante) => {
+  const verEstudiante = (estudiante: EstudianteAPI) => {
     selectedEstudiante.value = estudiante
     showDetailsModal.value = true
   }
 
-  // Cerrar el modal de detalles
+  // Cerrar modal de detalles
   const closeDetailsModal = () => {
     showDetailsModal.value = false
     selectedEstudiante.value = null
   }
 
-  // Editar desde el modal de detalles
-  const editarDesdeDetalles = () => {
-    if (selectedEstudiante.value) {
-      openModal(selectedEstudiante.value)
-      closeDetailsModal()
+  // Editar un estudiante
+  const editarEstudiante = (estudiante: EstudianteAPI) => {
+    if (estudiante) {
+      openModal(estudiante)
     }
   }
 
-  // Confirmar eliminación de un estudiante
-  const confirmarEliminar = (estudiante: Estudiante) => {
+  // Confirmar eliminación de estudiante
+  const confirmarEliminarEstudiante = (estudiante: EstudianteAPI) => {
     estudianteAEliminar.value = estudiante
     showConfirmDialog.value = true
   }
 
-  // Eliminar un estudiante
+  // Eliminar estudiante
   const eliminarEstudiante = async () => {
     if (!estudianteAEliminar.value) return
 
@@ -394,13 +337,15 @@ export default function useGestionEstudiantes() {
     try {
       await EstudiantesService.eliminarEstudiante(estudianteAEliminar.value.id_estudiante)
       
-      // Actualizar directamente el array de estudiantes en memoria
-      estudiantes.value = estudiantes.value.filter(e => e.id_estudiante !== estudianteAEliminar.value?.id_estudiante)
+      // Remover el estudiante de la lista
+      estudiantes.value = estudiantes.value.filter(
+        (e) => e.id_estudiante !== estudianteAEliminar.value?.id_estudiante
+      )
       
-      showNotification('Estudiante eliminado correctamente', 'success')
+      showNotification('Estudiante eliminado exitosamente')
     } catch (err: any) {
       console.error('Error al eliminar estudiante:', err)
-      error.value = 'No se pudo eliminar el estudiante. Intente nuevamente.'
+      error.value = 'No se pudo eliminar el estudiante'
       showNotification('No se pudo eliminar el estudiante. Intente nuevamente.', 'error')
     } finally {
       cargando.value = false
@@ -409,22 +354,27 @@ export default function useGestionEstudiantes() {
     }
   }
 
-  // Abrir el modal de importación
+  // Abrir modal de importación
   const openImportModal = () => {
     showImportModal.value = true
   }
 
-  // Cerrar el modal de importación
+  // Cerrar modal de importación
   const closeImportModal = () => {
     showImportModal.value = false
   }
 
-  // Importar estudiantes desde Excel (función de ejemplo)
-  const importarEstudiantes = (file: File) => {
-    console.log('Importando estudiantes desde:', file.name)
-    showNotification(`Archivo ${file.name} importado correctamente`, 'success')
-    closeImportModal()
+  // Procesar archivo de importación
+  const procesarArchivo = async (file: File) => {
+    showNotification('Funcionalidad de importación en desarrollo', 'error')
   }
+
+  // Cargar datos iniciales
+  onMounted(() => {
+    cargarEstudiantes()
+    cargarSecciones()
+    cargarAnioActivo()
+  })
 
   return {
     // Estado
@@ -454,12 +404,11 @@ export default function useGestionEstudiantes() {
     guardarEstudiante,
     verEstudiante,
     closeDetailsModal,
-    editarDesdeDetalles,
-    confirmarEliminar,
+    editarEstudiante,
+    confirmarEliminarEstudiante,
     eliminarEstudiante,
     openImportModal,
     closeImportModal,
-    importarEstudiantes,
-    closeCredencialesModal,
+    procesarArchivo
   }
 }

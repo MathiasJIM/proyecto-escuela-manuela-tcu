@@ -292,10 +292,10 @@
     <div class="sidebar-footer">
       <div class="user-info">
         <div class="user-avatar">
-          <font-awesome-icon icon="fa-user-circle" />
+          <span>{{ authStore.userName.value ? authStore.userName.value.charAt(0) : 'D' }}</span>
         </div>
         <div class="user-details">
-          <p class="user-name">{{ nombreUsuario }}</p>
+          <p class="user-name">{{ authStore.userName.value }}</p>
           <p class="user-role">Dirección</p>
         </div>
       </div>
@@ -313,30 +313,71 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-import { useNotificacionesStore } from '@/stores/notificacionesStore';
+import { useAvisosNotificaciones } from '@/composables/dashboards/useAvisosNotificaciones';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { 
+  faHome, 
+  faUser, 
+  faUserTie, 
+  faChild, 
+  faUsers, 
+  faCalendarAlt, 
+  faBook, 
+  faClipboardList, 
+  faChevronRight, 
+  faChevronDown, 
+  faSignOutAlt, 
+  faBell, 
+  faFolder,
+  faFileAlt,
+  faSchool,
+  faGraduationCap
+} from '@fortawesome/free-solid-svg-icons';
+
+// Registrar los íconos
+library.add(
+  faHome, 
+  faUser, 
+  faUserTie, 
+  faChild, 
+  faUsers, 
+  faCalendarAlt, 
+  faBook, 
+  faClipboardList, 
+  faChevronRight, 
+  faChevronDown, 
+  faSignOutAlt, 
+  faBell, 
+  faFolder,
+  faFileAlt,
+  faSchool,
+  faGraduationCap
+);
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
-const notificacionesStore = useNotificacionesStore();
 
-const nombreUsuario = computed(() => authStore.userName);
+// Usar el composable de avisos y notificaciones para obtener el conteo de no leídas
+const { cantidadNoLeidas } = useAvisosNotificaciones('direccion');
 
+// Estado para los submenús
 const submenuStates = ref({
   usuarios: false,
   anios: false,
   horarios: false
 });
 
-const cantidadNoLeidas = computed(() => notificacionesStore.cantidadNoLeidas);
-
-const isActive = (path: string) => {
+// Verificar si una ruta está activa
+function isActive(path: string) {
   return route.path === path || route.path.startsWith(`${path}/`);
-};
-const isSubmenuActive = (submenu: string) => {
+}
+
+// Verificar si un submenú está activo
+function isSubmenuActive(submenu: string) {
   if (submenu === 'usuarios') {
     return route.path.includes('/dashboard/direccion/usuarios/');
   } else if (submenu === 'anios') {
@@ -345,19 +386,22 @@ const isSubmenuActive = (submenu: string) => {
     return route.path.includes('/dashboard/direccion/horarios/');
   }
   return false;
-};
+}
 
-const toggleSubmenu = (submenu: string) => {
+// Alternar la visibilidad de un submenú
+function toggleSubmenu(submenu: string) {
   submenuStates.value[submenu as keyof typeof submenuStates.value] = 
     !submenuStates.value[submenu as keyof typeof submenuStates.value];
-};
+}
 
-const cerrarSesion = async () => {
-  await authStore.logout();
-  router.replace({ name: 'login' });
-};
+// Cerrar sesión
+function cerrarSesion() {
+  authStore.logout();
+  router.push('/login');
+}
 </script>
 
 <style scoped>
 @import '@/assets/styles/dashboards/direccion/sidebar.css';
+@import '@/assets/styles/dashboards/shared/notification-badge.css';
 </style>

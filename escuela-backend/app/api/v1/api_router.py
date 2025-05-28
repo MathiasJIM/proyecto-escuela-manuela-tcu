@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1 import auth, usuario, materia, seccion, anio_lectivo, profesor, estudiante
+from app.api.v1 import aviso, auth, usuario, materia, seccion, anio_lectivo, profesor, estudiante, padre, documento
 
 api_router = APIRouter()
 
@@ -43,4 +43,22 @@ api_router.include_router(
     estudiante.router,
     prefix="/estudiantes",
     tags=["Estudiantes"]
+)
+
+api_router.include_router(
+    padre.router,
+    prefix="/padres",
+    tags=["Padres"]
+)
+
+api_router.include_router(
+    documento.router,
+    prefix="/documentos",
+    tags=["Documentos"]
+)
+
+api_router.include_router(
+    aviso.router,
+    prefix="/avisos",
+    tags=["Avisos"]
 )

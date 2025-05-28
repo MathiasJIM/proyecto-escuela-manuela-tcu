@@ -46,6 +46,7 @@
         <table class="table">
           <thead>
             <tr>
+              <th>Cédula</th>
               <th>Nombre Completo</th>
               <th>Sección</th>
               <th>Acciones</th>
@@ -58,7 +59,10 @@
               class="table-row"
             >
               <td>
-                <div class="cell-content">{{ estudiante.nombre }}</div>
+                <div class="cell-content">{{ estudiante.cedula }}</div>
+              </td>
+              <td>
+                <div class="cell-content">{{ estudiante.nombre }} {{ estudiante.primer_apellido }} {{ estudiante.segundo_apellido }}</div>
               </td>
               <td>
                 <div class="cell-content">
@@ -81,9 +85,9 @@
                     <font-awesome-icon :icon="['fas', 'pen']" />
                   </button>
                   <button
-                    @click="confirmarEliminar(estudiante)"
-                    class="btn-action btn-delete"
-                    title="Eliminar"
+                    @click="confirmarEliminarEstudiante(estudiante)"
+                    class="btn-delete btn"
+                    title="Eliminar estudiante"
                   >
                     <font-awesome-icon :icon="['fas', 'trash-alt']" />
                   </button>
@@ -119,16 +123,55 @@
           </div>
 
           <form @submit.prevent="guardarEstudiante" class="modal-form">
-            <!-- Nombre completo -->
+            <!-- Cédula -->
             <div class="form-group">
-              <label for="nombre">Nombre Completo</label>
+              <label for="cedula">Cédula:</label>
+              <input
+                type="text"
+                id="cedula"
+                v-model="formData.cedula"
+                class="form-control"
+                required
+                placeholder="Ingrese la cédula del estudiante"
+              />
+            </div>
+
+            <!-- Nombre -->
+            <div class="form-group">
+              <label for="nombre">Nombre:</label>
               <input
                 type="text"
                 id="nombre"
                 v-model="formData.nombre"
                 class="form-control"
-                placeholder="Ingrese el nombre completo del estudiante"
                 required
+                placeholder="Ingrese el nombre del estudiante"
+              />
+            </div>
+
+            <!-- Primer Apellido -->
+            <div class="form-group">
+              <label for="primer_apellido">Primer Apellido:</label>
+              <input
+                type="text"
+                id="primer_apellido"
+                v-model="formData.primer_apellido"
+                class="form-control"
+                required
+                placeholder="Ingrese el primer apellido"
+              />
+            </div>
+
+            <!-- Segundo Apellido -->
+            <div class="form-group">
+              <label for="segundo_apellido">Segundo Apellido:</label>
+              <input
+                type="text"
+                id="segundo_apellido"
+                v-model="formData.segundo_apellido"
+                class="form-control"
+                required
+                placeholder="Ingrese el segundo apellido"
               />
             </div>
 
@@ -322,7 +365,7 @@
         <div class="modal-container">
           <div class="modal-header">
             <h2 class="modal-title">Credenciales de Acceso</h2>
-            <button @click="closeCredencialesModal" class="modal-close-btn">
+            <button @click="showCredencialesModal = false" class="modal-close-btn">
               <font-awesome-icon :icon="['fas', 'xmark']" />
             </button>
           </div>
@@ -377,7 +420,7 @@
           </div>
 
           <div class="modal-footer">
-            <button @click="closeCredencialesModal" class="btn btn-primary">Entendido</button>
+            <button @click="showCredencialesModal = false" class="btn btn-secondary">Entendido</button>
           </div>
         </div>
       </div>
@@ -406,7 +449,7 @@ const {
   closeModal,
   guardarEstudiante,
   eliminarEstudiante,
-  confirmarEliminar,
+  confirmarEliminarEstudiante,
   verEstudiante,
   showDetailsModal,
   selectedEstudiante,
@@ -416,13 +459,12 @@ const {
   showImportModal,
   openImportModal,
   closeImportModal,
-  importarEstudiantes,
+  procesarArchivo,
   secciones,
   anioActivo,
   cargandoSecciones,
   showCredencialesModal,
-  credencialesPadre,
-  closeCredencialesModal
+  credencialesPadre
 } = useGestionEstudiantes()
 
 // Función para cerrar el modal de eliminación
@@ -465,9 +507,9 @@ const formatFileSize = (bytes: number): string => {
 }
 
 // Subir el archivo
-const uploadFile = () => {
+const uploadFile = async () => {
   if (selectedFile.value) {
-    importarEstudiantes(selectedFile.value)
+    await procesarArchivo(selectedFile.value)
     selectedFile.value = null
     if (fileInput.value) {
       fileInput.value.value = ''

@@ -23,34 +23,19 @@
         </div>
 
         <div class="filter-select-container">
-          <label for="destinatariosFilter" class="filter-label">Destinatarios:</label>
-          <select 
-            id="destinatariosFilter" 
-            v-model="filtroDestinatarios" 
-            class="filter-select"
-          >
+          <label for="destinatarioFilter" class="filter-label">Destinatario:</label>
+          <select id="destinatarioFilter" v-model="filtroDestinatario" class="filter-select">
             <option value="">Todos</option>
+            <option value="todos">Todos</option>
             <option value="profesores">Profesores</option>
             <option value="padres">Padres</option>
-            <option value="ambos">Ambos</option>
           </select>
         </div>
 
-        <div class="filter-select-container">
-          <label for="estadoFilter" class="filter-label">Estado:</label>
-          <select 
-            id="estadoFilter" 
-            v-model="filtroEstado" 
-            class="filter-select"
-          >
-            <option value="">Todos</option>
-            <option value="enviado">Enviado</option>
-            <option value="programado">Programado</option>
-          </select>
-        </div>
+
       </div>
       <div class="filter-info">
-        <span>{{ avisosFiltrados.length }} avisos encontrados</span>
+        <span>{{ avisosFiltradosPorDestinatario.length }} avisos encontrados</span>
       </div>
     </div>
 
@@ -62,48 +47,37 @@
             <th class="col-titulo">Título</th>
             <th class="col-fecha">Fecha de envío</th>
             <th class="col-destinatarios">Destinatarios</th>
-            <th class="col-medio">Medio de envío</th>
-            <th class="col-estado">Estado</th>
             <th class="col-acciones">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="avisosFiltrados.length === 0">
-            <td colspan="6" class="empty-message">
+            <td colspan="4" class="empty-message">
               No se encontraron avisos. Crea un nuevo aviso para comenzar.
             </td>
           </tr>
-          <tr v-for="aviso in avisosFiltrados" :key="aviso.id">
+
+          <tr v-for="aviso in avisosFiltradosPorDestinatario" :key="aviso.id_aviso">
             <td class="aviso-titulo">{{ aviso.titulo }}</td>
-            <td>{{ formatearFecha(aviso.fechaEnvio) }}</td>
-            <td>{{ obtenerDestinatarios(aviso) }}</td>
-            <td>{{ obtenerMedioEnvio(aviso) }}</td>
+            <td>{{ formatDate(new Date(aviso.fecha_envio)) }}</td>
             <td>
-              <span class="estado-badge" :class="aviso.estado">
-                {{ aviso.estado === 'enviado' ? 'Enviado' : 'Programado' }}
-              </span>
+              <span v-if="aviso.destinatario === 'todos'">Todos</span>
+              <span v-else-if="aviso.destinatario === 'profesores'">Profesores</span>
+              <span v-else-if="aviso.destinatario === 'padres'">Padres</span>
+              <span v-else>{{ aviso.destinatario }}</span>
             </td>
             <td>
               <div class="acciones">
-                <button 
-                  @click="verAviso(aviso)" 
-                  class="btn-accion btn-ver"
-                  title="Ver detalles"
-                >
+                <button class="action-btn view" @click="() => verAviso(aviso)" title="Ver detalles">
                   <font-awesome-icon :icon="['fas', 'eye']" />
                 </button>
-                <button 
-                  v-if="aviso.estado === 'programado'"
-                  @click="editarAviso(aviso)" 
-                  class="btn-accion btn-editar"
-                  title="Editar"
-                >
+                <button class="action-btn edit" @click="() => editarAviso(aviso)" title="Editar aviso">
                   <font-awesome-icon :icon="['fas', 'pen']" />
                 </button>
-                <button 
-                  @click="confirmarEliminar(aviso)" 
-                  class="btn-accion btn-eliminar"
-                  title="Eliminar"
+                <button
+                  class="action-btn delete"
+                  @click="() => confirmarEliminar(aviso)"
+                  title="Eliminar aviso"
                 >
                   <font-awesome-icon :icon="['fas', 'trash']" />
                 </button>
@@ -136,119 +110,43 @@
                 placeholder="Ej: Reunión de padres"
               />
             </div>
-            
+
             <div class="form-group">
-              <label for="cuerpoAviso" class="form-label">Cuerpo del aviso:</label>
+              <label for="contenidoAviso" class="form-label">Contenido del aviso:</label>
               <textarea
-                id="cuerpoAviso"
-                v-model="avisoForm.cuerpo"
+                id="contenidoAviso"
+                v-model="avisoForm.contenido"
                 class="form-control"
-                rows="5"
+                rows="4"
                 required
                 placeholder="Escriba el contenido del aviso aquí..."
               ></textarea>
             </div>
-            
+
+
+
             <div class="form-group">
-              <label for="destinatariosAviso" class="form-label">Destinatarios:</label>
+              <label for="destinatarioAviso" class="form-label">Destinatario:</label>
               <select
-                id="destinatariosAviso"
-                v-model="avisoForm.destinatarios"
+                id="destinatarioAviso"
+                v-model="avisoForm.destinatario"
                 class="form-control"
                 required
               >
-                <option value="">Seleccione los destinatarios</option>
-                <option value="profesores">Todos los profesores</option>
-                <option value="padres">Todos los padres</option>
-                <option value="ambos">Todos los profesores y padres</option>
-                <option value="especificos">Padres de estudiantes específicos</option>
+                <option value="todos">Todos</option>
+                <option value="profesores">Profesores</option>
+                <option value="padres">Padres</option>
               </select>
             </div>
-            
-            <div class="form-group" v-if="avisoForm.destinatarios === 'especificos'">
-              <label for="estudiantesEspecificos" class="form-label">Buscar estudiantes:</label>
-              <div class="search-estudiantes-container">
-                <input
-                  type="text"
-                  id="estudiantesEspecificos"
-                  v-model="busquedaEstudiantes"
-                  class="form-control"
-                  placeholder="Escriba el nombre del estudiante..."
-                />
-                <div class="estudiantes-list" v-if="busquedaEstudiantes && estudiantesFiltrados.length > 0">
-                  <div 
-                    v-for="estudiante in estudiantesFiltrados" 
-                    :key="estudiante.id"
-                    class="estudiante-item"
-                    @click="seleccionarEstudiante(estudiante)"
-                  >
-                    {{ estudiante.nombre }} - {{ estudiante.seccion }}
-                  </div>
-                </div>
-              </div>
-              
-              <div class="estudiantes-seleccionados" v-if="avisoForm.estudiantesIds.length > 0">
-                <div 
-                  v-for="id in avisoForm.estudiantesIds" 
-                  :key="id"
-                  class="estudiante-tag"
-                >
-                  {{ obtenerNombreEstudiante(id) }}
-                  <button 
-                    type="button" 
-                    class="estudiante-remove" 
-                    @click="eliminarEstudiante(id)"
-                  >
-                    <font-awesome-icon icon="fa-times" />
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="medioEnvioAviso" class="form-label">Medio de envío:</label>
-              <select
-                id="medioEnvioAviso"
-                v-model="avisoForm.medioEnvio"
-                class="form-control"
-                required
-              >
-                <option value="">Seleccione el medio de envío</option>
-                <option value="notificacion">Notificación interna</option>
-                <option value="correo">Correo electrónico</option>
-                <option value="ambos">Ambos</option>
-              </select>
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">
-                <input 
-                  type="checkbox" 
-                  v-model="avisoForm.programado"
-                /> 
-                Programar envío
-              </label>
-              
-              <div v-if="avisoForm.programado" class="fecha-programacion">
-                <input
-                  type="datetime-local"
-                  v-model="avisoForm.fechaProgramada"
-                  class="form-control"
-                  required
-                />
-              </div>
-            </div>
+
+
+
+
           </form>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="cerrarModal">
-            Cancelar
-          </button>
-          <button 
-            class="btn btn-primary" 
-            @click="guardarAviso" 
-            :disabled="!esFormularioValido"
-          >
+          <button class="btn btn-secondary" @click="cerrarModal">Cancelar</button>
+          <button class="btn btn-primary" @click="guardarAviso" :disabled="!esFormularioValido">
             {{ modoEdicion ? 'Guardar cambios' : 'Crear aviso' }}
           </button>
         </div>
@@ -267,20 +165,27 @@
         <div class="modal-content">
           <div class="aviso-detalles">
             <div class="aviso-meta">
-              <p><strong>Fecha de envío:</strong> {{ formatearFecha(avisoSeleccionado?.fechaEnvio) }}</p>
-              <p><strong>Destinatarios:</strong> {{ obtenerDestinatarios(avisoSeleccionado) }}</p>
-              <p><strong>Medio de envío:</strong> {{ obtenerMedioEnvio(avisoSeleccionado) }}</p>
-              <p><strong>Estado:</strong> {{ avisoSeleccionado?.estado === 'enviado' ? 'Enviado' : 'Programado' }}</p>
+              <p>
+                <strong>Fecha de envío:</strong> {{ formatDate(new Date(avisoSeleccionado?.fecha_envio || '')) }}
+              </p>
+              <p>
+                <strong>Destinatario:</strong> 
+                <span v-if="avisoSeleccionado?.destinatario === 'todos'">Todos</span>
+                <span v-else-if="avisoSeleccionado?.destinatario === 'profesores'">Profesores</span>
+                <span v-else-if="avisoSeleccionado?.destinatario === 'padres'">Padres</span>
+                <span v-else>{{ avisoSeleccionado?.destinatario }}</span>
+              </p>
+              <p>
+                <strong>Estado:</strong> Enviado
+              </p>
             </div>
             <div class="aviso-cuerpo">
-              <p>{{ avisoSeleccionado?.cuerpo }}</p>
+              <p>{{ avisoSeleccionado?.contenido }}</p>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" @click="cerrarModalVer">
-            Cerrar
-          </button>
+          <button class="btn btn-primary" @click="cerrarModalVer">Cerrar</button>
         </div>
       </div>
     </div>
@@ -296,16 +201,13 @@
         </div>
         <div class="modal-content">
           <p class="confirm-message">
-            ¿Está seguro que desea eliminar el aviso <strong>{{ avisoAEliminar?.titulo }}</strong>?
+            ¿Está seguro que desea eliminar el aviso <strong>{{ avisoAEliminar?.titulo }}</strong
+            >?
           </p>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="cancelarEliminar">
-            Cancelar
-          </button>
-          <button class="btn btn-danger" @click="eliminarAviso">
-            Eliminar
-          </button>
+          <button class="btn btn-secondary" @click="cancelarEliminar">Cancelar</button>
+          <button class="btn btn-danger" @click="eliminarAvisoYCerrarModal">Eliminar</button>
         </div>
       </div>
     </div>
@@ -313,7 +215,7 @@
     <!-- Notificación -->
     <div class="notification" v-if="notification.show" :class="notification.type">
       <div class="notification-content">
-        <font-awesome-icon :icon="notification.icon" class="notification-icon" />
+        <font-awesome-icon :icon="notification.type === 'success' ? 'check-circle' : 'exclamation-circle'" class="notification-icon" />
         <span class="notification-message">{{ notification.message }}</span>
       </div>
       <button class="notification-close" @click="closeNotification">
@@ -323,48 +225,71 @@
   </div>
 </template>
 <script setup lang="ts">
-import useAvisos from '@/composables/dashboards/direccion/useAvisos';
+import useAvisos from '@/composables/dashboards/direccion/useAvisos'
+import { ref, computed } from 'vue'
+import type { Aviso } from '@/services/avisos.service'
+
+const showConfirmModal = ref(false)
+const avisoAEliminar = ref<Aviso | null>(null)
+
+// Variables para la tabla
+const filtroDestinatario = ref('')
+
+// Computed para filtrar avisos por destinatario
+const avisosFiltradosPorDestinatario = computed(() => {
+  if (!filtroDestinatario.value) return avisosFiltrados.value
+  
+  return avisosFiltrados.value.filter(aviso => {
+    return aviso.destinatario === filtroDestinatario.value
+  })
+})
 
 const {
-  // Estado
   busqueda,
-  filtroDestinatarios,
-  filtroEstado,
   showModal,
   showVerModal,
-  showConfirmModal,
-  modoEdicion,
-  busquedaEstudiantes,
   avisoForm,
-  avisoAEliminar,
   avisoSeleccionado,
-  notification,
-  
-  // Computed
   avisosFiltrados,
-  estudiantesFiltrados,
   esFormularioValido,
-  
-  // Métodos
+  notification,
+  modoEdicion,
   abrirModalCrear,
-  editarAviso,
-  verAviso,
   cerrarModal,
   cerrarModalVer,
   guardarAviso,
-  confirmarEliminar,
-  cancelarEliminar,
+  verAviso,
   eliminarAviso,
-  seleccionarEstudiante,
-  eliminarEstudiante,
-  obtenerNombreEstudiante,
-  obtenerDestinatarios,
-  obtenerMedioEnvio,
-  formatearFecha,
-  closeNotification
-} = useAvisos();
+  formatDate,
+  editarAviso
+} = useAvisos()
+
+// Función para cerrar la notificación
+const closeNotification = () => {
+  notification.value.show = false
+}
+
+const cancelarEliminar = () => {
+  showConfirmModal.value = false
+  avisoAEliminar.value = null
+}
+
+const eliminarAvisoYCerrarModal = async () => {
+  if (avisoAEliminar.value) {
+    await eliminarAviso(avisoAEliminar.value)
+    showConfirmModal.value = false
+    avisoAEliminar.value = null
+  }
+}
+
+const confirmarEliminar = (aviso: Aviso) => {
+  avisoAEliminar.value = aviso
+  showConfirmModal.value = true
+}
+
+
 </script>
 
 <style scoped>
-@import '@/assets/styles/dashboards/direccion/avisos.css'
+@import '@/assets/styles/dashboards/direccion/avisos.css';
 </style>

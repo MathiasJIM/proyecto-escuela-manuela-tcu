@@ -46,12 +46,12 @@ def create_estudiante(
             detail="No tiene permisos para crear estudiantes"
         )
     
-    # Verificar si ya existe un estudiante con ese nombre
-    db_estudiante = crud.get_estudiante_by_nombre(db, nombre=estudiante_in.nombre)
+    # Verificar si ya existe un estudiante con esa cédula
+    db_estudiante = crud.get_estudiante_by_cedula(db, cedula=estudiante_in.cedula)
     if db_estudiante:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Ya existe un estudiante con ese nombre"
+            detail="Ya existe un estudiante con esa cédula"
         )
     
     # Crear estudiante y cuenta de padre
@@ -60,14 +60,17 @@ def create_estudiante(
     # Preparar respuesta
     response = {
         "id_estudiante": estudiante.id_estudiante,
+        "cedula": estudiante.cedula,
         "nombre": estudiante.nombre,
+        "primer_apellido": estudiante.primer_apellido,
+        "segundo_apellido": estudiante.segundo_apellido,
         "id_padre": estudiante.id_padre,
         "correo_padre": correo_padre,
         "contrasena_padre": contrasena_padre
     }
     
-    # Agregar información sobre la matrícula si se proporcionó una sección
-    if estudiante_in.id_seccion:
+    # Agregar información sobre la matrícula si se proporcionó una sección y año
+    if estudiante_in.id_seccion and estudiante_in.id_anio:
         response["matriculado"] = True
         response["id_seccion"] = estudiante_in.id_seccion
         response["id_anio"] = estudiante_in.id_anio

@@ -44,15 +44,14 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 import { computed } from 'vue';
-import { useNotificacionesStore } from '@/stores/notificacionesStore';
 import { useAuthStore } from '@/stores/auth';
+import { useAvisosNotificaciones } from '@/composables/dashboards/useAvisosNotificaciones';
 
 const route = useRoute();
 const router = useRouter();
-const notificacionesStore = useNotificacionesStore();
 const authStore = useAuthStore();
 
-const cantidadNoLeidas = computed(() => notificacionesStore.cantidadNoLeidas);
+const { cantidadNoLeidas } = useAvisosNotificaciones('profesor');
 
 const userName = computed(() => authStore.userName);
 
@@ -78,4 +77,5 @@ const cerrarSesion = async () => {
 
 <style scoped>
 @import '@/assets/styles/dashboards/profesores/sidebar.css';
+@import '@/assets/styles/dashboards/shared/notification-badge.css';
 </style>

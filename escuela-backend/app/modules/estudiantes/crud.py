@@ -45,16 +45,17 @@ def get_estudiantes(db: Session, skip: int = 0, limit: int = 100) -> List[Estudi
     return estudiantes
 
 
-def get_estudiante_by_nombre(db: Session, nombre: str) -> Optional[Estudiante]:
-    return db.query(Estudiante).filter(Estudiante.nombre == nombre).first()
+def get_estudiante_by_cedula(db: Session, cedula: str) -> Optional[Estudiante]:
+    return db.query(Estudiante).filter(Estudiante.cedula == cedula).first()
 
 
 def create_estudiante_with_padre(db: Session, estudiante: EstudianteCreate) -> tuple[Estudiante, str, str]:
-    correo_padre = generar_correo_padre(estudiante.nombre, db)
-    contrasena_padre = generar_contrasena_segura(correo_padre, estudiante.nombre)
+    nombre_completo = f"{estudiante.nombre} {estudiante.primer_apellido} {estudiante.segundo_apellido}"
+    correo_padre = generar_correo_padre(nombre_completo, db)
+    contrasena_padre = generar_contrasena_segura(correo_padre, nombre_completo)
     
     usuario_padre = UsuarioCreate(
-        nombre=f"Padre de {estudiante.nombre}",
+        nombre=f"Padre de {estudiante.nombre} {estudiante.primer_apellido}",
         correo=correo_padre,
         contrasena=contrasena_padre,
         rol="padre"
@@ -72,26 +73,24 @@ def create_estudiante_with_padre(db: Session, estudiante: EstudianteCreate) -> t
     db.flush()
     
     db_estudiante = Estudiante(
+        cedula=estudiante.cedula,
         nombre=estudiante.nombre,
-        id_padre=db_usuario.id_usuario
+        primer_apellido=estudiante.primer_apellido,
+        segundo_apellido=estudiante.segundo_apellido,
+        id_padre=db_usuario.id_usuario,
+        id_seccion=estudiante.id_seccion
     )
     db.add(db_estudiante)
     db.flush()
     
-    # Si se proporcionaron IDs de sección y año lectivo, crear matrícula
+    # Crear matrícula si hay sección asignada y hay un año lectivo activo
     if estudiante.id_seccion:
-        # Si no se proporciona un año lectivo, usar el año activo
-        id_anio = estudiante.id_anio
-        if not id_anio:
-            anio_activo = get_anio_lectivo_activo(db)
-            if anio_activo:
-                id_anio = anio_activo.id_anio
-        
-        if id_anio:
+        anio_activo = get_anio_lectivo_activo(db)
+        if anio_activo:
             db_matricula = Matricula(
                 id_estudiante=db_estudiante.id_estudiante,
                 id_seccion=estudiante.id_seccion,
-                id_anio=id_anio
+                id_anio=anio_activo.id_anio
             )
             db.add(db_matricula)
     
@@ -110,25 +109,23 @@ def update_estudiante(db: Session, id_estudiante: UUID, estudiante: EstudianteUp
     if not db_estudiante:
         return None
     
-    # Actualizar los campos del estudiante (excluyendo id_seccion e id_anio que no son parte del modelo Estudiante)
-    estudiante_data = estudiante.dict(exclude={"id_seccion", "id_anio"}, exclude_unset=True)
+    # Actualizar los campos del estudiante
+    estudiante_data = estudiante.dict(exclude_unset=True)
     for key, value in estudiante_data.items():
         setattr(db_estudiante, key, value)
     
     # Si se proporciona una sección, actualizar o crear la matrícula
     if estudiante.id_seccion is not None:
-        # Obtener el año lectivo (usar el proporcionado o el activo)
-        id_anio = estudiante.id_anio
-        if not id_anio:
-            anio_activo = get_anio_lectivo_activo(db)
-            if anio_activo:
-                id_anio = anio_activo.id_anio
+        # Actualizar la sección en el estudiante
+        db_estudiante.id_seccion = estudiante.id_seccion
         
-        if id_anio:
+        # Obtener el año lectivo activo
+        anio_activo = get_anio_lectivo_activo(db)
+        if anio_activo:
             # Buscar si ya existe una matrícula para este estudiante en este año
             matricula = db.query(Matricula).filter(
                 Matricula.id_estudiante == id_estudiante,
-                Matricula.id_anio == id_anio
+                Matricula.id_anio == anio_activo.id_anio
             ).first()
             
             if matricula:
@@ -139,7 +136,7 @@ def update_estudiante(db: Session, id_estudiante: UUID, estudiante: EstudianteUp
                 nueva_matricula = Matricula(
                     id_estudiante=id_estudiante,
                     id_seccion=estudiante.id_seccion,
-                    id_anio=id_anio
+                    id_anio=anio_activo.id_anio
                 )
                 db.add(nueva_matricula)
     

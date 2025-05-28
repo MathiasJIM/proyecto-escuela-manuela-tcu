@@ -2,8 +2,12 @@ import api from './api'
 
 export interface Estudiante {
   id_estudiante: string
+  cedula: string
   nombre: string
+  primer_apellido: string
+  segundo_apellido: string
   id_padre: string | null
+  id_seccion: string | null
   seccion?: {
     id_seccion: string
     nombre: string
@@ -11,24 +15,30 @@ export interface Estudiante {
   }
 }
 
-export interface EstudianteWithCredentials extends Estudiante {
+export interface EstudianteWithCredentials extends Omit<Estudiante, 'id_seccion'> {
   correo_padre: string
   contrasena_padre: string
   matriculado?: boolean
-  id_seccion?: string
+  id_seccion?: string | null
   id_anio?: string
 }
 
 export interface EstudianteCreate {
+  cedula: string
   nombre: string
+  primer_apellido: string
+  segundo_apellido: string
+  id_padre?: string
   id_seccion?: string
-  id_anio?: string
 }
 
 export interface EstudianteUpdate {
+  cedula?: string
   nombre?: string
+  primer_apellido?: string
+  segundo_apellido?: string
+  id_padre?: string
   id_seccion?: string
-  id_anio?: string
 }
 
 const EstudiantesService = {
